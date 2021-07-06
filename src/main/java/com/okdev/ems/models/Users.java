@@ -1,16 +1,18 @@
 package com.okdev.ems.models;
 
+import com.okdev.ems.dto.AmountDTO;
 import com.okdev.ems.dto.UserDTO;
 import com.okdev.ems.models.enums.UserRole;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Users {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     private String firstName;
     private String lastName;
@@ -19,6 +21,10 @@ public class Users {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+    private Currencies currency;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Categories> category = new ArrayList<>();
@@ -34,8 +40,21 @@ public class Users {
         this.role = role;
     }
 
+    public Users(String firstName, String lastName, String email, String password, UserRole role, Currencies currency) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.currency = currency;
+    }
+
     public UserDTO toDTO() {
-        return UserDTO.of(userId, firstName, lastName, email, role);
+        return UserDTO.of(userId, currency.getCurrencyId(), firstName, lastName, email, currency.getName(), currency.getShortName(), role);
+    }
+
+    public AmountDTO toAmountDTO(LocalDate currentDate, Double amountIncome, Double amountExpense) {
+        return AmountDTO.of(userId, currency.getCurrencyId(), currentDate.getYear(), currentDate.getMonthValue(), currency.getSign(), amountIncome, amountExpense);
     }
 
     public Long getUserId() {
@@ -84,5 +103,21 @@ public class Users {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Currencies getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currencies currency) {
+        this.currency = currency;
+    }
+
+    public List<Categories> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<Categories> category) {
+        this.category = category;
     }
 }

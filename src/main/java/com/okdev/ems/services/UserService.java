@@ -2,6 +2,7 @@ package com.okdev.ems.services;
 
 import com.okdev.ems.dto.UserDTO;
 import com.okdev.ems.exceptions.EmsAuthException;
+import com.okdev.ems.exceptions.EmsBadRequestException;
 import com.okdev.ems.models.Users;
 import com.okdev.ems.models.enums.UserRole;
 
@@ -11,6 +12,8 @@ public interface UserService {
     Users validateUser(String email, String password) throws EmsAuthException;
 
     UserDTO addUser(String firstName, String lastName, String email, String password, UserRole role) throws EmsAuthException;
+
+    UserDTO editUser(Long userId, UserDTO userDTO) throws EmsBadRequestException;
 
     Users findByLogin(String email) throws EmsAuthException;
 

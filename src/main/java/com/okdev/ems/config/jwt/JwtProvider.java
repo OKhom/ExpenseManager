@@ -1,7 +1,12 @@
 package com.okdev.ems.config.jwt;
 
+import com.okdev.ems.dto.TokenDTO;
+import com.okdev.ems.dto.TokenValidateDTO;
+import com.okdev.ems.exceptions.EmsAuthException;
 import com.okdev.ems.models.Users;
 import io.jsonwebtoken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -9,16 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class JwtProvider {
 
-    @Value("$(jwt.secretcode)")
+    @Value("${jwt.secretcode}")
     private String jwtSecretCode;
 
-    public Map<String, String> generateToken(Users user) {
+    private final Logger log = LoggerFactory.getLogger(JwtProvider.class);
+
+    public TokenDTO generateToken(Users user) {
         Date date = Date.from(LocalDate.now().plusDays(30).atStartOfDay(ZoneId.systemDefault()).toInstant());
         String token = Jwts.builder()
                 .setSubject(user.getEmail())
@@ -28,29 +33,33 @@ public class JwtProvider {
                 .claim("firstName", user.getFirstName())
                 .claim("lastName", user.getLastName())
                 .compact();
-        Map<String, String> map = new HashMap<>();
-        map.put("token", token);
-        return map;
+        return new TokenDTO(token);
     }
 
-    public boolean validateToken(String token) {
+    public TokenValidateDTO validateToken(String token) throws EmsAuthException {
         try {
             Jwts.parser()
                     .setSigningKey(jwtSecretCode)
                     .parseClaimsJws(token);
-            return true;
+            return TokenValidateDTO.of(true, "Token valid");
         } catch (ExpiredJwtException expEx) {
-            System.out.println("Token expired");
+            log.info("Token expired");
+            return TokenValidateDTO.of(false, "Token expired");
         } catch (UnsupportedJwtException unsEx) {
-            System.out.println("Unsupported jwt");
+            log.info("Unsupported jwt");
+            return TokenValidateDTO.of(false, "Unsupported jwt");
         } catch (MalformedJwtException mjEx) {
-            System.out.println("Malformed jwt");
+            log.info("Malformed jwt");
+            return TokenValidateDTO.of(false, "Malformed jwt");
         } catch (SignatureException sigEx) {
-            System.out.println("Invalid signature");
+            log.info("Token invalid signature");
+//            log.trace("Token invalid signature: {}", sigEx);
+            return TokenValidateDTO.of(false, "Token invalid signature");
+//            throw new EmsAuthException("Invalid token signature");
         } catch (Exception ex) {
-            System.out.println("Invalid token");
+            log.info("Invalid token");
+            return TokenValidateDTO.of(false, "Invalid token");
         }
-        return false;
     }
 
     public String getEmailFromToken(String token) {

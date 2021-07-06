@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Entity
 public class Transactions {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
 
 //    @Temporal(TemporalType.DATE)
@@ -61,9 +61,11 @@ public class Transactions {
 
     public TransactionDTO toDTO() {
         if (subcategory == null)
-            return TransactionDTO.of(category.getUser().getUserId(), category.getCategoryId(), transactionId, date, amount, note);
+            return TransactionDTO.of(category.getUser().getUserId(), category.getCategoryId(), transactionId,
+                    date, category.getName(), amount, category.getCurrency().getSign(), note, category.getType());
         else
-            return TransactionDTO.of(category.getUser().getUserId(), category.getCategoryId(), transactionId, date, amount, subcategory.getSubname(), note);
+            return TransactionDTO.of(category.getUser().getUserId(), category.getCategoryId(), transactionId, subcategory.getSubcategoryId(),
+                    date, category.getName(), amount, category.getCurrency().getSign(), subcategory.getSubname(), note, category.getType());
     }
 
     public Long getTransactionId() {

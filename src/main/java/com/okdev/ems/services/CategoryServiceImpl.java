@@ -1,21 +1,18 @@
 package com.okdev.ems.services;
 
-import com.okdev.ems.dto.CategoryDTO;
-import com.okdev.ems.dto.SubcategoryDTO;
-import com.okdev.ems.dto.SubcategoryDTOext;
+import com.okdev.ems.config.utils.ExchangeRates;
+import com.okdev.ems.dto.*;
 import com.okdev.ems.exceptions.EmsBadRequestException;
 import com.okdev.ems.exceptions.EmsResourceNotFoundException;
-import com.okdev.ems.models.Categories;
-import com.okdev.ems.models.Subcategories;
-import com.okdev.ems.models.Users;
+import com.okdev.ems.models.*;
 import com.okdev.ems.models.enums.CategoryType;
-import com.okdev.ems.repositories.CategoryRepository;
-import com.okdev.ems.repositories.SubcategoryRepository;
-import com.okdev.ems.repositories.UserRepository;
+import com.okdev.ems.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,10 +28,26 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     SubcategoryRepository subcategoryRepository;
 
+    @Autowired
+    TransactionRepository transactionRepository;
+
+    @Autowired
+    CurrencyRepository currencyRepository;
+
+    @Autowired
+    ExchangeRates exchangeRates;
+
     @Override
     @Transactional(readOnly = true)
     public List<CategoryDTO> fetchAllCategories(Long userId) {
         return categoryRepository.findAll(userId).stream().map(Categories::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategoryDTO> fetchCategoriesByTypeAndDate(Long userId, Integer year, Integer month, CategoryType type) {
+        LocalDate currentMonth = LocalDate.of(year, month, 1);
+        return categoryRepository.findByType(userId, type).stream().map(c -> c.toDTObyDate(currentMonth)).collect(Collectors.toList());
     }
 
     @Override
@@ -52,11 +65,14 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO addCategory(Long userId, CategoryDTO categoryDTO, CategoryType type) throws EmsBadRequestException {
         try {
             Users user = userRepository.findUserById(userId);
-            Categories category = Categories.fromDTO(user, categoryDTO, type);
+            Currencies currency = currencyRepository.getOne(categoryDTO.getCurrencyId());
+            Categories category = Categories.fromDTO(user, categoryDTO, type, currency);
             categoryRepository.save(category);
             return category.toDTO();
         } catch (NullPointerException npe) {
             throw new EmsBadRequestException("Add Category: invalid request");
+        } catch (Exception e) {
+            throw new EmsResourceNotFoundException("Add Category: element not found in DB");
         }
     }
 
@@ -69,6 +85,8 @@ public class CategoryServiceImpl implements CategoryService {
                 category.setName(categoryDTO.getName());
             if (categoryDTO.getDescription() != null)
                 category.setDescription(categoryDTO.getDescription());
+            if (categoryDTO.getCurrencyId() != null)
+                category.setCurrency(currencyRepository.getOne(categoryDTO.getCurrencyId()));
             categoryRepository.save(category);
             return category.toDTO();
         } catch (NullPointerException npe) {
@@ -78,9 +96,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public void removeCategoryWithAllTransactions(Long userId, Long categoryId) throws EmsResourceNotFoundException {
+    public void removeCategory(Long userId, Long categoryId, CategoryDeleteDTO categoryDeleteDTO) throws EmsResourceNotFoundException {
         try {
             Categories category = categoryRepository.findById(userId, categoryId);
+            if (!categoryDeleteDTO.getDeleteWithAllTransaction() && category.getTransactions().size() > 0)
+                throw new EmsBadRequestException("Category deleting error: associated with Transactions");
             categoryRepository.deleteById(category.getCategoryId());
         } catch (NullPointerException npe) {
             throw new EmsResourceNotFoundException("Delete Category: invalid request");
@@ -90,6 +110,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public List<SubcategoryDTOext> fetchAllSubcategories(Long userId, Long categoryId) {
+        System.out.println("User ID is " + userId + ", Category ID is " + categoryId);
         return subcategoryRepository.findAll(userId, categoryId).stream().map(Subcategories::toDTOext).collect(Collectors.toList());
     }
 
@@ -135,9 +156,61 @@ public class CategoryServiceImpl implements CategoryService {
     public void removeSubcategory(Long userId, Long categoryId, Long subcategoryId) throws EmsResourceNotFoundException {
         try {
             Subcategories subcategory = subcategoryRepository.findById(userId, categoryId, subcategoryId);
+            if (subcategory.getTransactions().size() > 0)
+                throw new EmsBadRequestException("Subcategory deleting error: associated with Transactions");
             subcategoryRepository.deleteById(subcategory.getSubcategoryId());
         } catch (NullPointerException npe) {
             throw new EmsResourceNotFoundException("Delete Subcategory: invalid request");
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CurrencyDTO> fetchAllCurrencies() {
+        return currencyRepository.findAll().stream().map(Currencies::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CurrencyDTO fetchCurrencyById(Long currencyId) throws EmsResourceNotFoundException {
+        try {
+            return currencyRepository.getOne(currencyId).toDTO();
+        } catch (NullPointerException npe) {
+            throw new EmsResourceNotFoundException("Currency ID not found");
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AmountDTO getTotalAmountByDate(Long userId, Integer year, Integer month) throws EmsResourceNotFoundException {
+        Users user = userRepository.findUserById(userId);
+        LocalDate currentMonth = LocalDate.of(year, month, 1);
+        Double amountIncome = amount(user, CategoryType.INCOME, currentMonth);
+        Double amountExpense = amount(user, CategoryType.EXPENSE, currentMonth);
+        return user.toAmountDTO(currentMonth, amountIncome, amountExpense);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Double amount(Users user, CategoryType type, LocalDate currentMonth) {
+        String currencyDefault = user.getCurrency().getShortName();
+        List<CategoryDTO> categoryList = categoryRepository.findByType(user.getUserId(), type).stream()
+                .map(c -> c.toDTObyDate(currentMonth))
+                .collect(Collectors.toList());
+        Double amount = 0D;
+        try {
+            for (CategoryDTO category : categoryList) {
+                Double currencyRate;
+                if (!user.getCurrency().getCurrencyId().equals(category.getCurrencyId())) {
+                    currencyRate = exchangeRates.currentRate(currencyDefault, currencyRepository.getOne(category.getCurrencyId()).getShortName());
+                } else {
+                    currencyRate = 1D;
+                }
+                amount += category.getTotalExpense() * currencyRate;
+            }
+        } catch (IOException e) {
+            throw new EmsBadRequestException("Currency Rate request is invalid");
+        }
+        return amount;
     }
 }

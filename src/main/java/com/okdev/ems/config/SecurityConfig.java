@@ -1,5 +1,6 @@
 package com.okdev.ems.config;
 
+import com.okdev.ems.config.jwt.JwtAuthenticationSuccessHandler;
 import com.okdev.ems.config.jwt.JwtFilter;
 import com.okdev.ems.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .passwordEncoder(passwordEncoder);
 //    }
 
+    private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
+
+    public SecurityConfig(JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler) {
+        this.jwtAuthenticationSuccessHandler = jwtAuthenticationSuccessHandler;
+    }
+
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable()
@@ -38,25 +45,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/users/id").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/category").hasRole("USER")
-                .antMatchers("/api/users/register", "/api/users/auth").permitAll()
                 .antMatchers("/admin/*").hasRole("ADMIN")
                 .antMatchers("/user/*").hasRole("USER")
+                .antMatchers("/", "/index.html", "/api/users/register", "/api/users/auth", "/login", "/registration", "/js/**", "/css/**", "/vendor/**", "/fonts/**", "/images/**").permitAll()
 //                .anyRequest().authenticated()
-//                .and()
-//        .formLogin()
-//                .loginPage("/login")
-//                .loginProcessingUrl("/j_spring_security_check")
+                .and()
+        .formLogin()
+                .loginPage("/login.html")
+//                .loginProcessingUrl("/api/users/auth")
 //                .failureUrl("/login?error")
-//                .usernameParameter("j_login")
-//                .passwordParameter("j_password")
+                .usernameParameter("email")
+                .passwordParameter("password")
+//                .defaultSuccessUrl("/index.html")
+                .successHandler(jwtAuthenticationSuccessHandler)
 //                .permitAll()
-//                .and()
-//        .logout()
+                .and()
+        .logout()
 //                .permitAll()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/login?logout");
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login.html")
                 .and()
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }

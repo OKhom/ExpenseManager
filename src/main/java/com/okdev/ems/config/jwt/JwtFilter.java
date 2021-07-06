@@ -1,6 +1,9 @@
 package com.okdev.ems.config.jwt;
 
+import com.okdev.ems.exceptions.EmsAuthException;
 import com.okdev.ems.services.UserDetailsServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,49 +23,8 @@ import static io.jsonwebtoken.lang.Strings.hasText;
 @Component
 public class JwtFilter extends GenericFilterBean {
 
-//    public static final String AUTHORIZATION = "Authorization";
-//
-//    @Autowired
-//    private JwtProvider jwtProvider;
-//
-//    @Autowired
-//    private UserDetailsServiceImpl userDetailsService;
-//
-//    @Override
-//    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-//        logger.info("do filter...");
-//        HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-//        HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
-//
-//        String authHeader = httpRequest.getHeader(AUTHORIZATION);
-//        logger.info("Authorization Header is: " + authHeader);
-//        if (authHeader != null) {
-//            String[] authHeaderArr = authHeader.split("Bearer ");
-//            if (authHeaderArr.length > 0 && authHeaderArr[1] != null) {
-//                String token = authHeaderArr[1];
-//                try {
-//                    String emailFromToken = jwtProvider.getEmailFromToken(token);
-//                    UserDetails userDetails = userDetailsService.loadUserByUsername(emailFromToken);
-//                    UsernamePasswordAuthenticationToken auth =
-//                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//                    SecurityContextHolder.getContext().setAuthentication(auth);
-//                } catch (Exception e) {
-//                    httpResponse.sendError(HttpStatus.NON_AUTHORITATIVE_INFORMATION.value(), "Invalid/expired token");
-//                    return;
-//                }
-//            } else {
-//                httpResponse.sendError(HttpStatus.NO_CONTENT.value(), "Authorization token must be Bearer [token]");
-//                return;
-//            }
-//        } else {
-//            httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "Authorization token must be provided");
-//            return;
-//        }
-//        filterChain.doFilter(servletRequest, servletResponse);
-//    }
-//}
-
-    public static final String AUTHORIZATION = "Authorization";
+    private static final String AUTHORIZATION = "Authorization";
+    private final Logger log = LoggerFactory.getLogger(JwtFilter.class);
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -75,7 +37,8 @@ public class JwtFilter extends GenericFilterBean {
         logger.info("do filter...");
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
-        if (token != null && jwtProvider.validateToken(token)) {
+        String requestURI = httpRequest.getRequestURI();
+        if (token != null && jwtProvider.validateToken(token).getSuccess()) {
             String userLogin = jwtProvider.getEmailFromToken(token);
 //            String userId = jwtProvider.getIdFromToken(token);
             UserDetails customUserDetails = userDetailsService.loadUserByUsername(userLogin);
@@ -83,13 +46,16 @@ public class JwtFilter extends GenericFilterBean {
                     new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
             httpRequest.setAttribute("userId", jwtProvider.getIdFromToken(token));
+            log.info("set Authentication to security context for '{}', uri: {}", auth.getName(), requestURI);
+        } else if (!jwtProvider.validateToken(token).getSuccess()) {
+            log.info("no valid JWT token found, uri: {}", requestURI);
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearer = request.getHeader(AUTHORIZATION);
-        logger.info("Authorization Header is: " + bearer);
+        log.info("Authorization Header is: " + bearer);
         if (hasText(bearer) && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }

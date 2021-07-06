@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/category/{categoryId}/transaction")
+@RequestMapping("/api/transaction")
 public class TransactionController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class TransactionController {
     @Autowired
     TransactionService transactionService;
 
-    @GetMapping("")
+    @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<TransactionDTO>> getAllTransactions(HttpServletRequest request,
                                                                    @PathVariable("categoryId") Long categoryId) {
         Long userId = userService.getUserId(request);
@@ -31,7 +31,16 @@ public class TransactionController {
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
-    @GetMapping("/{transactionId}")
+    @GetMapping("/{year}/{month}")
+    public ResponseEntity<List<TransactionDTO>> getTransactionsByDate(HttpServletRequest request,
+                                                                      @PathVariable("year") Integer year,
+                                                                      @PathVariable("month") Integer month) {
+        Long userId = userService.getUserId(request);
+        List<TransactionDTO> transactions = transactionService.fetchTransactionsByDate(userId, year, month);
+        return new ResponseEntity<>(transactions, HttpStatus.OK);
+    }
+
+    @GetMapping("/{transactionId}/category/{categoryId}")
     public ResponseEntity<TransactionDTO> getTransactionById(HttpServletRequest request,
                                                              @PathVariable("categoryId") Long categoryId,
                                                              @PathVariable("transactionId") Long transactionId) {
@@ -40,7 +49,7 @@ public class TransactionController {
         return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping("/category/{categoryId}")
     public ResponseEntity<TransactionDTO> addTransaction(HttpServletRequest request,
                                                          @PathVariable("categoryId") Long categoryId,
                                                          @RequestBody TransactionDTO transactionDTO) {
@@ -49,7 +58,7 @@ public class TransactionController {
         return new ResponseEntity<>(transaction, HttpStatus.CREATED);
     }
 
-    @PostMapping("/subcategory/{subcategoryId}")
+    @PostMapping("/category/{categoryId}/subcategory/{subcategoryId}")
     public ResponseEntity<TransactionDTO> addTransactionWithSubcategory(HttpServletRequest request,
                                                          @PathVariable("categoryId") Long categoryId,
                                                          @PathVariable("subcategoryId") Long subcategoryId,
@@ -59,7 +68,7 @@ public class TransactionController {
         return new ResponseEntity<>(transaction, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{transactionId}")
+    @PutMapping("/{transactionId}/category/{categoryId}")
     public ResponseEntity<TransactionDTO> updateTransaction(HttpServletRequest request,
                                                             @PathVariable("categoryId") Long categoryId,
                                                             @PathVariable("transactionId") Long transactionId,
@@ -69,7 +78,7 @@ public class TransactionController {
         return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
 
-    @PutMapping("/{transactionId}/subcategory/{subcategoryId}")
+    @PutMapping("/{transactionId}/category/{categoryId}/subcategory/{subcategoryId}")
     public ResponseEntity<TransactionDTO> updateTransaction(HttpServletRequest request,
                                                             @PathVariable("categoryId") Long categoryId,
                                                             @PathVariable("transactionId") Long transactionId,
@@ -80,7 +89,7 @@ public class TransactionController {
         return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{transactionId}")
+    @DeleteMapping("/{transactionId}/category/{categoryId}")
     public ResponseEntity<Map<String, Boolean>> removeTransaction(HttpServletRequest request,
                                                                   @PathVariable("categoryId") Long categoryId,
                                                                   @PathVariable("transactionId") Long transactionId) {

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional(readOnly = true)
     public List<TransactionDTO> fetchAllTransactions(Long userId, Long categoryId) {
         return transactionRepository.findAll(userId, categoryId).stream().map(Transactions::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TransactionDTO> fetchTransactionsByDate(Long userId, Integer year, Integer month) {
+        LocalDate from = LocalDate.of(year, month, 1);
+        return transactionRepository.findByDate(userId, from, from.plusMonths(1)).stream().map(Transactions::toDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -77,6 +85,8 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionDTO updateTransaction(Long userId, Long categoryId, Long transactionId, TransactionDTO transactionDTO) throws EmsBadRequestException {
         try {
             Transactions transaction = transactionRepository.findById(userId, categoryId, transactionId);
+            if (transaction.getSubcategory() != null)
+                transaction.setSubcategory(null);
             if (transactionDTO.getDate() != null)
                 transaction.setDate(transactionDTO.getDate());
             if (transactionDTO.getAmount() != null)

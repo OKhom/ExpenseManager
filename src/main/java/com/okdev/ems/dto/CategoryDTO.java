@@ -10,26 +10,32 @@ public class CategoryDTO {
     private CategoryType type;
     private String name;
     private String description;
+    private Long currencyId;
+    private String currencySign;
     private Double totalExpense;
+    private Double budget;
     private List<SubcategoryDTO> subcategories;
 
     public CategoryDTO() {
     }
 
-    public CategoryDTO(Long userId, Long categoryId, CategoryType type, String name, String description,
-                       Double totalExpense, List<SubcategoryDTO> subcategories) {
+    public CategoryDTO(Long userId, Long categoryId, CategoryType type, String name, String description, Long currencyId,
+                       String currencySign, Double totalExpense, Double budget, List<SubcategoryDTO> subcategories) {
         this.userId = userId;
         this.categoryId = categoryId;
         this.type = type;
         this.name = name;
         this.description = description;
+        this.currencyId = currencyId;
+        this.currencySign = currencySign;
         this.totalExpense = totalExpense;
+        this.budget = budget;
         this.subcategories = subcategories;
     }
 
-    public static CategoryDTO of(Long userId, Long categoryId, CategoryType type, String name, String description,
-                                 Double totalExpense, List<SubcategoryDTO> subcategories) {
-        return new CategoryDTO(userId, categoryId, type, name, description, totalExpense, subcategories);
+    public static CategoryDTO of(Long userId, Long categoryId, CategoryType type, String name, String description, Long currencyId,
+                                 String currencySign, Double totalExpense, Double budget, List<SubcategoryDTO> subcategories) {
+        return new CategoryDTO(userId, categoryId, type, name, description, currencyId, currencySign, totalExpense, budget, subcategories);
     }
 
     public Long getUserId() {
@@ -86,5 +92,29 @@ public class CategoryDTO {
 
     public void setTotalExpense(Double totalExpense) {
         this.totalExpense = totalExpense;
+    }
+
+    public Double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Double budget) {
+        this.budget = budget;
+    }
+
+    public Long getCurrencyId() {
+        return currencyId;
+    }
+
+    public void setCurrencyId(Long currencyId) {
+        this.currencyId = currencyId;
+    }
+
+    public String getCurrencySign() {
+        return currencySign;
+    }
+
+    public void setCurrencySign(String currencySign) {
+        this.currencySign = currencySign;
     }
 }

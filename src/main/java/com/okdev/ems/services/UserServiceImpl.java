@@ -2,10 +2,15 @@ package com.okdev.ems.services;
 
 import com.okdev.ems.dto.UserDTO;
 import com.okdev.ems.exceptions.EmsAuthException;
+import com.okdev.ems.exceptions.EmsBadRequestException;
+import com.okdev.ems.models.Currencies;
 import com.okdev.ems.models.Users;
 import com.okdev.ems.models.enums.UserRole;
+import com.okdev.ems.repositories.CurrencyRepository;
 import com.okdev.ems.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +25,13 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
 
     @Autowired
+    CurrencyRepository currencyRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 
     @Override
     @Transactional(readOnly = true)
@@ -31,7 +42,11 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public Users findById(Long id) throws EmsAuthException {
-        return userRepository.findUserById(id);
+        try {
+            return userRepository.findUserById(id);
+        } catch (NullPointerException npe) {
+            throw new EmsAuthException("User ID not found");
+        }
     }
 
     @Override
@@ -39,10 +54,11 @@ public class UserServiceImpl implements UserService{
     public Users validateUser(String email, String password) throws EmsAuthException {
         if (email != null) email = email.toLowerCase();
         try {
-            Users user = userRepository.findUserByEmail(email);
+            UserDetails user = userDetailsService.loadUserByUsername(email);
             if (!passwordEncoder.matches(password, user.getPassword()))
                 throw new EmsAuthException("Invalid password");
-            return user;
+            System.out.println("Current User is " + user);
+            return userRepository.findUserByEmail(user.getUsername());
         } catch (NullPointerException e) {
             throw new EmsAuthException("Invalid email");
         }
@@ -61,12 +77,31 @@ public class UserServiceImpl implements UserService{
                 if (count > 0)
                     throw new EmsAuthException("Email already in use");
                 String passHash = passwordEncoder.encode(password);
-                Users user = new Users(firstName, lastName, email, passHash, role);
+                Currencies currency = currencyRepository.getOne(2L);
+                Users user = new Users(firstName, lastName, email, passHash, role, currency);
                 userRepository.save(user);
                 return user.toDTO();
             } else throw new EmsAuthException("User email not found");
         } catch (NullPointerException npe) {
             throw new EmsAuthException("User email not found");
+        }
+    }
+
+    @Override
+    @Transactional
+    public UserDTO editUser(Long userId, UserDTO userDTO) throws EmsBadRequestException {
+        try {
+            Users user = userRepository.findUserById(userId);
+            if (userDTO.getFirstName() != null)
+                user.setFirstName(userDTO.getFirstName());
+            if (userDTO.getLastName() != null)
+                user.setLastName(userDTO.getLastName());
+            if (userDTO.getCurrencyId() != null)
+                user.setCurrency(currencyRepository.getOne(userDTO.getCurrencyId()));
+            userRepository.save(user);
+            return user.toDTO();
+        } catch (NullPointerException npe) {
+            throw new EmsBadRequestException("Edit User: invalid request");
         }
     }
 

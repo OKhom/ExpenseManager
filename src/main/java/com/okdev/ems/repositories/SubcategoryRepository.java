@@ -12,12 +12,12 @@ import java.util.List;
 @Repository
 public interface SubcategoryRepository extends JpaRepository<Subcategories, Long> {
 
-    @Query("SELECT s FROM Users u, Categories c, Subcategories s WHERE u.userId = :userId AND c.categoryId = :categoryId")
+    @Query("SELECT s FROM Subcategories s WHERE s.category.user.userId = :userId AND s.category.categoryId = :categoryId")
     List<Subcategories> findAll(@Param("userId") Long userId,
                                 @Param("categoryId") Long categoryId);
 
-    @Query("SELECT s FROM Users u, Categories c, Subcategories s " +
-            "WHERE u.userId = :userId AND c.categoryId = :categoryId AND s.subcategoryId = :subcategoryId")
+    @Query("SELECT s FROM Subcategories s " +
+            "WHERE s.category.user.userId = :userId AND s.category.categoryId = :categoryId AND s.subcategoryId = :subcategoryId")
     Subcategories findById(@Param("userId") Long userId,
                            @Param("categoryId") Long categoryId,
                            @Param("subcategoryId") Long subcategoryId) throws EmsResourceNotFoundException;

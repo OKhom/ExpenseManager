@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 public class Subcategories {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long subcategoryId;
     private String subname;
 
@@ -76,4 +76,5 @@ public class Subcategories {
     public void setTransactions(List<Transactions> transactions) {
         this.transactions = transactions;
     }
+
 }

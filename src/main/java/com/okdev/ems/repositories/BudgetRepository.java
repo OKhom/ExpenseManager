@@ -13,13 +13,11 @@ import java.util.List;
 @Repository
 public interface BudgetRepository extends JpaRepository<Budgets, BudgetId> {
 
-    @Query("SELECT b FROM Users u, Categories c, Budgets b " +
-            "WHERE u.userId = :userId AND c.categoryId = :categoryId AND b.budgetId.category = :categoryId")
+    @Query("SELECT b FROM Budgets b WHERE b.category.user.userId = :userId AND b.budgetId.category = :categoryId")
     List<Budgets> findAll(@Param("userId") Long userId,
                           @Param("categoryId") Long categoryId);
 
-    @Query("SELECT b FROM Users u, Categories c, Budgets b " +
-            "WHERE u.userId = :userId AND c.categoryId = :categoryId " +
+    @Query("SELECT b FROM Budgets b WHERE b.category.user.userId = :userId " +
             "AND b.budgetId.category = :categoryId AND b.budgetId.year = :year AND b.budgetId.month = :month")
     Budgets findByDate(@Param("userId") Long userId,
                        @Param("categoryId") Long categoryId,

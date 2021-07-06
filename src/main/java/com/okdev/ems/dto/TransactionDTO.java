@@ -1,49 +1,65 @@
 package com.okdev.ems.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.okdev.ems.models.enums.CategoryType;
 
 import java.time.LocalDate;
 
 public class TransactionDTO {
-    Long userId;
-    Long categoryId;
-    Long transactionId;
+    private Long userId;
+    private Long categoryId;
+    private Long transactionId;
+    private Long subcategoryId;
 
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    LocalDate date;
+    private LocalDate date;
 
-    Double amount;
-    String subcategory;
-    String note;
+    private String categoryName;
+    private Double amount;
+    private String currencySign;
+    private String subcategory;
+    private String note;
+    private CategoryType type;
 
     public TransactionDTO() {
     }
 
-    public TransactionDTO(Long userId, Long categoryId, Long transactionId, LocalDate date, Double amount, String note) {
+    public TransactionDTO(Long userId, Long categoryId, Long transactionId, LocalDate date,
+                          String categoryName, Double amount, String currencySign, String note, CategoryType type) {
         this.userId = userId;
         this.categoryId = categoryId;
         this.transactionId = transactionId;
         this.date = date;
+        this.categoryName = categoryName;
         this.amount = amount;
+        this.currencySign = currencySign;
         this.note = note;
+        this.type = type;
     }
 
-    public TransactionDTO(Long userId, Long categoryId, Long transactionId, LocalDate date, Double amount, String subcategory, String note) {
+    public TransactionDTO(Long userId, Long categoryId, Long transactionId, Long subcategoryId, LocalDate date,
+                          String categoryName, Double amount, String currencySign, String subcategory, String note, CategoryType type) {
         this.userId = userId;
         this.categoryId = categoryId;
         this.transactionId = transactionId;
+        this.subcategoryId = subcategoryId;
         this.date = date;
+        this.categoryName = categoryName;
         this.amount = amount;
+        this.currencySign = currencySign;
         this.subcategory = subcategory;
         this.note = note;
+        this.type = type;
     }
 
-    public static TransactionDTO of(Long userId, Long categoryId, Long transactionId, LocalDate date, Double amount, String note) {
-        return new TransactionDTO(userId, categoryId, transactionId, date, amount, note);
+    public static TransactionDTO of(Long userId, Long categoryId, Long transactionId, LocalDate date,
+                                    String categoryName, Double amount, String currencySign, String note, CategoryType type) {
+        return new TransactionDTO(userId, categoryId, transactionId, date, categoryName, amount, currencySign, note, type);
     }
 
-    public static TransactionDTO of(Long userId, Long categoryId, Long transactionId, LocalDate date, Double amount, String subcategory, String note) {
-        return new TransactionDTO(userId, categoryId, transactionId, date, amount, subcategory, note);
+    public static TransactionDTO of(Long userId, Long categoryId, Long transactionId, Long subcategoryId, LocalDate date,
+                                    String categoryName, Double amount, String currencySign, String subcategory, String note, CategoryType type) {
+        return new TransactionDTO(userId, categoryId, transactionId, subcategoryId, date, categoryName, amount, currencySign, subcategory, note, type);
     }
 
     public Long getUserId() {
@@ -100,5 +116,37 @@ public class TransactionDTO {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public CategoryType getType() {
+        return type;
+    }
+
+    public void setType(CategoryType type) {
+        this.type = type;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getCurrencySign() {
+        return currencySign;
+    }
+
+    public void setCurrencySign(String currencySign) {
+        this.currencySign = currencySign;
+    }
+
+    public Long getSubcategoryId() {
+        return subcategoryId;
+    }
+
+    public void setSubcategoryId(Long subcategoryId) {
+        this.subcategoryId = subcategoryId;
     }
 }

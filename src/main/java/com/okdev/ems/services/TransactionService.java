@@ -10,6 +10,8 @@ public interface TransactionService {
 
     List<TransactionDTO> fetchAllTransactions(Long userId, Long categoryId);
 
+    List<TransactionDTO> fetchTransactionsByDate(Long userId, Integer year, Integer month);
+
     TransactionDTO fetchTransactionById(Long userId, Long categoryId, Long transactionId) throws EmsResourceNotFoundException;
 
     TransactionDTO addTransaction(Long userId, Long categoryId, TransactionDTO transactionDTO) throws EmsBadRequestException;
