@@ -19,9 +19,6 @@ $(document).ready(function(){
     });
     loadCategoryCards();
     loadTotalAmount();
-
-	// Initialize Bootstrap DateTimePicker
-	//$("#datepicker1").datepicker();
 	
     // $.getJSON('/account', function(data) {
     //     $('#login').text(data.email);
