@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService{
                 if (count > 0)
                     throw new EmsAuthException("Email already in use");
                 String passHash = passwordEncoder.encode(password);
-                Currencies currency = currencyRepository.getOne(2L);
+                Currencies currency = currencyRepository.findByShortName("USD");
                 Users user = new Users(firstName, lastName, email, passHash, role, currency);
                 userRepository.save(user);
                 return user.toDTO();
