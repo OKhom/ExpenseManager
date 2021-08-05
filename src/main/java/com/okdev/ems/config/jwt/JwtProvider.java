@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -24,7 +23,7 @@ public class JwtProvider {
     private final Logger log = LoggerFactory.getLogger(JwtProvider.class);
 
     public TokenDTO generateToken(Users user) {
-        Date date = Date.from(LocalDate.now().plusDays(30).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date date = Date.from(LocalDate.now().plusDays(15).atStartOfDay(ZoneId.systemDefault()).toInstant());
         String token = Jwts.builder()
                 .setSubject(user.getEmail())
                 .setExpiration(date)
@@ -53,9 +52,7 @@ public class JwtProvider {
             return TokenValidateDTO.of(false, "Malformed jwt");
         } catch (SignatureException sigEx) {
             log.info("Token invalid signature");
-//            log.trace("Token invalid signature: {}", sigEx);
             return TokenValidateDTO.of(false, "Token invalid signature");
-//            throw new EmsAuthException("Invalid token signature");
         } catch (Exception ex) {
             log.info("Invalid token");
             return TokenValidateDTO.of(false, "Invalid token");

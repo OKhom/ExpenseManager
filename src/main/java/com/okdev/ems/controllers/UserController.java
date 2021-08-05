@@ -9,6 +9,7 @@ import com.okdev.ems.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +28,10 @@ public class UserController {
     JwtProvider jwtProvider;
 
     @GetMapping("/id")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserDTO> getUser(HttpServletRequest request) {
         Long userId = userService.getUserId(request);
         UserDTO userDTO = userService.findById(userId).toDTO();
-        System.out.println("Current User is " + userDTO.getEmail());
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
@@ -39,7 +40,6 @@ public class UserController {
         String email = (String) userMap.get("email");
         String password = (String) userMap.get("password");
         Users user = userService.validateUser(email, password);
-        System.out.println("ID=" + user.getUserId() + " role " + user.getRole());
         return new ResponseEntity<>(jwtProvider.generateToken(user), HttpStatus.OK);
     }
 
@@ -49,7 +49,6 @@ public class UserController {
         String lastName = (String) userMap.get("lastName");
         String email = (String) userMap.get("email");
         String password = (String) userMap.get("password");
-        System.out.println(email);
         UserDTO user = userService.addUser(firstName, lastName, email, password, UserRole.USER);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -68,9 +67,4 @@ public class UserController {
                 .getAuthentication()
                 .getPrincipal();
     }
-
-//    @RequestMapping("/login")
-//    public String loginPage() {
-//        return "login";
-//    }
 }

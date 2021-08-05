@@ -50,11 +50,16 @@ public class Users {
     }
 
     public UserDTO toDTO() {
-        return UserDTO.of(userId, currency.getCurrencyId(), firstName, lastName, email, currency.getName(), currency.getShortName(), role);
+        Long currencyId = currency == null ? null : currency.getCurrencyId();
+        String currencyName = currency == null ? "No currency" : currency.getName();
+        String currencyShortName = currency == null ? "" : currency.getShortName();
+        return UserDTO.of(userId, currencyId, firstName, lastName, email, currencyName, currencyShortName, role);
     }
 
     public AmountDTO toAmountDTO(LocalDate currentDate, Double amountIncome, Double amountExpense) {
-        return AmountDTO.of(userId, currency.getCurrencyId(), currentDate.getYear(), currentDate.getMonthValue(), currency.getSign(), amountIncome, amountExpense);
+        Long currencyId = currency == null ? null : currency.getCurrencyId();
+        String currencySign = currency == null ? "N/A" : currency.getSign();
+        return AmountDTO.of(userId, currencyId, currentDate.getYear(), currentDate.getMonthValue(), currencySign, amountIncome, amountExpense);
     }
 
     public Long getUserId() {

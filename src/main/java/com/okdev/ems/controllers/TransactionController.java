@@ -1,6 +1,8 @@
 package com.okdev.ems.controllers;
 
 import com.okdev.ems.dto.TransactionDTO;
+import com.okdev.ems.dto.results.ResultDTO;
+import com.okdev.ems.dto.results.SuccessResult;
 import com.okdev.ems.services.TransactionService;
 import com.okdev.ems.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/transaction")
@@ -90,13 +90,11 @@ public class TransactionController {
     }
 
     @DeleteMapping("/{transactionId}/category/{categoryId}")
-    public ResponseEntity<Map<String, Boolean>> removeTransaction(HttpServletRequest request,
-                                                                  @PathVariable("categoryId") Long categoryId,
-                                                                  @PathVariable("transactionId") Long transactionId) {
+    public ResponseEntity<ResultDTO> removeTransaction(HttpServletRequest request,
+                                                       @PathVariable("categoryId") Long categoryId,
+                                                       @PathVariable("transactionId") Long transactionId) {
         Long userId = userService.getUserId(request);
         transactionService.removeTransaction(userId, categoryId, transactionId);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("success", true);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResult(), HttpStatus.OK);
     }
 }

@@ -1,10 +1,4 @@
 // VARIABLES =============================================================
-var $notLoggedIn = $("#notLoggedIn");
-var $loggedIn = $("#loggedIn").hide();
-var $response = $("#response");
-var $login = $("#login");
-var $userInfo = $("#userInfo");
-// var $userInfo = $("#userInfo").hide();
 
 // FUNCTIONS =============================================================
 function doLogin(loginData) {
@@ -17,25 +11,12 @@ function doLogin(loginData) {
         success: function (data, textStatus, jqXHR) {
             setJwtToken(data.token);
             setLastUser(loginData.email)
-            console.log("Token is " + data.token);
-            console.log(getJwtToken());
-            // setTimeout(function () {
-            //     window.location.assign("/");
-            // }, 2000);
-
-            // window.location = url;
-            // $login.hide();
-            // $notLoggedIn.hide();
-            // showTokenInformation()
-            // showUserInformation();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             if (jqXHR.status === 401) {
                 alert("Authentication Error: " + jqXHR.responseJSON.message)
-                // loginError(jqXHR);
             } else {
                 alert("an unexpected error occurred: " + errorThrown);
-                // throw new Error("an unexpected error occurred: " + errorThrown);
             }
         }
     });
@@ -49,23 +30,14 @@ function doRegister(registerData) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            console.log("Registered User is " + data);
-            console.log("Token is " + getJwtToken());
             setLastUser(data.email)
             window.location.assign("/login.html");
-
-            // window.location = url;
-            // $login.hide();
-            // $notLoggedIn.hide();
-            // showTokenInformation()
-            // showUserInformation();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             if (jqXHR.status === 401) {
                 loginError(jqXHR);
             } else {
                 alert("an unexpected error occurred: " + errorThrown);
-                // throw new Error("an unexpected error occurred: " + errorThrown);
             }
         }
     });
@@ -77,10 +49,10 @@ function loadTotalAmount() {
         type: "GET",
         headers: createAuthorizationTokenHeader(),
         success: function (data, textStatus, jqXHR) {
-            console.log(data);
-            // returnTotalAmounts(data);
-            $('#amountIncome').empty().append(parseInt(data.amountIncome.toFixed(0)).toLocaleString() + ' ' + data.currencySign);
-            $('#amountExpense').empty().append(parseInt(data.amountExpense.toFixed(0)).toLocaleString() + ' ' + data.currencySign);
+            $('#amountIncome').empty()
+                .append(parseInt(data.amountIncome.toFixed(0)).toLocaleString() + ' ' + data.currencySign);
+            $('#amountExpense').empty()
+                .append(parseInt(data.amountExpense.toFixed(0)).toLocaleString() + ' ' + data.currencySign);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             errorToConsole(jqXHR);
@@ -94,7 +66,6 @@ function loadAllCurrencies(returnAllCurrencies) {
         type: "GET",
         headers: createAuthorizationTokenHeader(),
         success: function (data, textStatus, jqXHR) {
-            console.log(data);
             returnAllCurrencies(data);
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -103,17 +74,12 @@ function loadAllCurrencies(returnAllCurrencies) {
     });
 }
 
-// function returnFunctionData(data) {
-//     return data.name;
-// }
-
 function loadTransactionById(returnTransaction) {
     $.ajax({
         url: "api/transaction/" + getCurrentTransactionID() + "/category/" + getCurrentCategoryID(),
         type: "GET",
         headers: createAuthorizationTokenHeader(),
         success: function (data, textStatus, jqXHR) {
-            console.log(data);
             returnTransaction(data);
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -128,9 +94,7 @@ function loadCategoryById(returnCategory) {
         type: "GET",
         headers: createAuthorizationTokenHeader(),
         success: function (data, textStatus, jqXHR) {
-            console.log(data);
             returnCategory(data);
-            // $('#addTransactionHeader').empty().append(data.name);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             errorToConsole(jqXHR);
@@ -158,7 +122,6 @@ function loadTransactionCards() {
         type: "GET",
         headers: createAuthorizationTokenHeader(),
         success: function (data, textStatus, jqXHR) {
-            console.log(data);
             $("#transactionCards").empty();
             for (let i = 0; i < data.length; i++) {
                 let colorId = getColor(data[i].categoryId % getColorsNumber());
@@ -241,7 +204,6 @@ function loadCategoryCards() {
         type: "GET",
         headers: createAuthorizationTokenHeader(),
         success: function (data, textStatus, jqXHR) {
-            console.log(data);
             $("#categoryCards").empty();
             for (let i = 0; i < data.length; i++) {
                 let colorId = getColor(data[i].categoryId % getColorsNumber());
@@ -359,7 +321,6 @@ function addCategory(newCategory, categoryType) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            console.log("New category is: " + data.categoryId + ", " + data.name + ", " + data.currencyId + ", " + data.type);
             $("#addCategoryModal").modal('hide');
             loadCategoryCards();
         },
@@ -378,7 +339,6 @@ function updateCategory(updateCategory) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            console.log("Updated category is: " + data.categoryId + ", " + data.name + ", " + data.currencyId + ", " + data.type);
             $("#editCategoryModal").modal('hide');
             loadCategoryCards();
         },
@@ -416,9 +376,7 @@ function addSubcategory(newSubcategory, currentCategoryID) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            console.log("New subcategory is: " + data.subcategoryId + ", " + data.subname + ", " + data.categoryId);
             $("#addSubcategoryModal").modal('hide');
-            // loadCategoryCards();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             modalInputError(jqXHR, "#modalSubcategoryErrorText");
@@ -436,7 +394,6 @@ function updateSubcategory(subcategoryID, newSubcategory) {
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
             $("#updateSubcategoryModal").modal('hide');
-            // loadCategoryCards();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             modalInputError(jqXHR, "#modalUpdateSubcategoryErrorText");
@@ -451,7 +408,6 @@ function deleteSubcategory(subcategoryID) {
         headers: createAuthorizationTokenHeader(),
         success: function (data, textStatus, jqXHR) {
             $("#deleteSubcategoryModal").modal('hide');
-            // loadCategoryCards();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             modalInputError(jqXHR, "#modalDeleteSubcategoryErrorText");
@@ -500,9 +456,6 @@ function deleteBudget() {
         url: "/api/category/" + getCurrentCategoryID() + "/budget/" + getCurrentYear() + "/" + (parseInt(getCurrentMonth()) + 1),
         type: "DELETE",
         headers: createAuthorizationTokenHeader(),
-        // data: JSON.stringify(newBudget),
-        // contentType: "application/json; charset=utf-8",
-        // dataType: "json",
         success: function (data, textStatus, jqXHR) {
             $("#deleteBudgetModal").modal('hide');
             loadCategoryCards();
@@ -526,7 +479,6 @@ function addTransaction(newTransaction, currentCategoryID, currentSubcategory) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            console.log("Added Transaction is: " + data.categoryId + ", " + data.amount + ", " + data.note + ", " + data.date);
             $("#addTransactionModal").modal('hide');
             loadCategoryCards();
             loadTotalAmount();
@@ -550,7 +502,6 @@ function editTransaction(newTransaction, currentSubcategory) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            console.log("Edited Transaction is: " + data.categoryId + ", " + data.amount + ", " + data.note + ", " + data.date);
             $("#editTransactionModal").modal('hide');
             loadTransactionCards();
             loadTotalAmount();
@@ -581,7 +532,6 @@ function modalInputError(jqXHR, selectModalForm) {
     if (jqXHR.status === 401) {
         console.log("Error Code is: " + jqXHR.status + " " + jqXHR.responseJSON.message);
         $(selectModalForm).text("User Authorized invalid. Relogin and try again...");
-        // loginError(jqXHR);
     } else if (jqXHR.status === 400) {
         console.log("Error Code is: " + jqXHR.status + " " + jqXHR.responseJSON.message);
         $(selectModalForm).text(jqXHR.responseJSON.message);
@@ -605,7 +555,6 @@ function errorToConsole(jqXHR) {
         console.log("HTTP Status 500: " + jqXHR.readyState + " StatusText " + jqXHR.statusText);
     } else {
         console.log("an unexpected error occurred: " + jqXHR.status);
-        // throw new Error("an unexpected error occurred: " + errorThrown);
     }
 }
 
@@ -620,55 +569,15 @@ function loginError(jqXHR) {
 function doLogout() {
     removeJwtToken();
     window.location = "/logout";
-    // $login.show();
-    // $userInfo
-    //     .hide()
-    //     .find("#userInfoBody").empty();
-    // $loggedIn
-    //     .hide()
-    //     .attr("title", "")
-    //     .empty();
-    // $notLoggedIn.show();
 }
 
 function createAuthorizationTokenHeader() {
-    var token = getJwtToken();
+    let token = getJwtToken();
     if (token) {
         return {"Authorization": "Bearer " + token};
     } else {
         return {};
     }
-}
-
-function showUserInformation(returnUserInfo) {
-    $.ajax({
-        url: "/api/users/id",
-        type: "GET",
-        dataType: "json",
-        headers: createAuthorizationTokenHeader(),
-        success: function (data, textStatus, jqXHR) {
-            console.log(data);
-            returnUserInfo(data);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            if (jqXHR.status === 401) {
-                console.log("HTTP Status 401: " + jqXHR.responseJSON.message);
-            } else if (jqXHR.status === 404) {
-                console.log("HTTP Status 404: " + jqXHR.responseJSON.message);
-            } else if (jqXHR.status === 302) {
-                console.log("HTTP Status 302: " + jqXHR.responseJSON.message + jqXHR.getAllResponseHeaders());
-            } else if (jqXHR.status === 500) {
-                console.log("HTTP Status 500 - Redirect page to LOGIN PAGE by STATE " + jqXHR.readyState + " StatusText " + jqXHR.statusText);
-                window.location.replace("/login.html");
-            } else if (jqXHR.status === 200 && textStatus === "parsererror") {
-                console.log("Redirect page to ... by STATE " + jqXHR.readyState + " StatusText " + jqXHR.statusText);
-                window.location.replace("/login.html");
-            } else {
-                console.log("an unexpected error occurred: " + jqXHR.status + " " + textStatus + " " + errorThrown + " - END of Error");
-                // throw new Error("an unexpected error occurred: " + errorThrown);
-            }
-        }
-    });
 }
 
 function updateUser(updatedUser) {
@@ -680,7 +589,6 @@ function updateUser(updatedUser) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            console.log("Updated User is: " + data.userId + ", " + data.firstName + ", " + data.lastName + ", " + data.currencyId);
             $("#editUserModal").modal('hide');
             showUserInformation(function (data) {
                 $("#navUserName").empty().text(data.firstName + " " + data.lastName);
@@ -697,80 +605,290 @@ function updateUser(updatedUser) {
     });
 }
 
-function showTokenInformation() {
-    $loggedIn
-        .text("Token: " + getJwtToken())
-        .attr("title", "Token: " + getJwtToken())
-        .show();
+function showUserInformation(returnUserInfo) {
+    $.ajax({
+        url: "/api/users/id",
+        type: "GET",
+        dataType: "json",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            returnUserInfo(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown);
+        }
+    });
 }
 
-function showResponse(statusCode, message) {
-    $response
-        .empty()
-        .text(
-            "status code: "
-            + statusCode + "\n-------------------------\n"
-            + (typeof message === "object" ? JSON.stringify(message) : message)
+function showAdminInformation(returnAdminInfo) {
+    $.ajax({
+        url: "/api/admin/id",
+        type: "GET",
+        dataType: "json",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            returnAdminInfo(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown);
+        }
+    });
+}
+
+function loadPages(pageNavbar) {
+    $.ajax({
+        url: "/api/admin/count",
+        type: "GET",
+        dataType: "json",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            $("#quantityUsers").empty().text(data.count);
+            $("#quantityCurrencies").empty().text(data.countCurrencies);
+            $(pageNavbar).empty();
+            let count = pageNavbar === "#pages" ? data.count : data.countCurrencies;
+            let pageCount = (count / data.pageSize) + (count % data.pageSize > 0 ? 1 : 0);
+            for (let i = 1; i <= pageCount; i++) {
+                $(pageNavbar).append(
+                    $('<li>').attr('class', 'page-item').append(
+                        $('<a>').attr('class', 'page-link').attr('id', i - 1)
+                            .append(i))
+                );
+            }
+            if (pageNavbar === "#pages") {
+                $("#pageUsersNavbar").show();
+            } else if (pageNavbar === "#pagesCurrency") {
+                $("#pageCurrencyNavbar").show();
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown);
+        }
+    });
+}
+
+function loadData(page) {
+    $.ajax({
+        url: "/api/admin/users/page/" + page,
+        type: "GET",
+        dataType: "json",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            usersDataBuilder(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown);
+        }
+    });
+}
+
+function loadUsersDataByPattern(searchPattern) {
+    $.ajax({
+        url: "/api/admin/users/search/" + searchPattern,
+        type: "GET",
+        dataType: "json",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            usersDataBuilder(data);
+            $("#pageUsersNavbar").hide();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown);
+        }
+    });
+}
+
+function usersDataBuilder(data) {
+    $("#dataUsers > tbody").empty();
+    for (let i = 0; i < data.length; i++) {
+        $('#dataUsers > tbody:last-child').append(
+            $('<tr>')
+                .append(
+                    $('<td>').append(
+                        $('<input>').attr('type', 'checkbox').attr('value', data[i].userId)
+                    )
+                )
+                .append($('<td>').append(data[i].email))
+                .append($('<td>').append(data[i].firstName))
+                .append($('<td>').append(data[i].lastName))
+                .append($('<td>').append(data[i].currencyShortName))
         );
+    }
 }
 
-// REGISTER EVENT LISTENERS =============================================================
-$("#loginForm").submit(function (event) {
-    event.preventDefault();
+function loadCurrencyData(page) {
+    $.ajax({
+        url: "/api/admin/currency/page/" + page,
+        type: "GET",
+        dataType: "json",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            currenciesDataBuilder(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown);
+        }
+    });
+}
 
-    var $form = $(this);
-    var formData = {
-        username: $form.find('input[name="username"]').val(),
-        password: $form.find('input[name="password"]').val()
-    };
+function loadCurrenciesDataByPattern(searchPattern) {
+    $.ajax({
+        url: "/api/admin/currency/search/" + searchPattern,
+        type: "GET",
+        dataType: "json",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            currenciesDataBuilder(data);
+            $("#pageCurrencyNavbar").hide();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown);
+        }
+    });
+}
 
-    doLogin(formData);
-});
+function currenciesDataBuilder(data) {
+    $("#dataCurrencies > tbody").empty();
+    for (let i = 0; i < data.length; i++) {
+        $('#dataCurrencies > tbody:last-child').append(
+            $('<tr>')
+                .append(
+                    $('<td>').append(
+                        $('<input>').attr('type', 'checkbox').attr('value', data[i].currencyId)
+                    )
+                )
+                .append($('<td>').append(data[i].name))
+                .append($('<td>').append(data[i].shortName))
+                .append($('<td>').append(data[i].sign))
+        );
+    }
+}
+
+function loadCurrencyById(currencyId, returnCurrency) {
+    $.ajax({
+        url: "/api/admin/currency/" + currencyId,
+        type: "GET",
+        dataType: "json",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            returnCurrency(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown);
+        }
+    });
+}
+
+function usersCount() {
+    $.ajax({
+        url: "/api/admin/count",
+        type: "GET",
+        dataType: "json",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            $("#quantityUsers").empty().text(data.count);
+            $("#quantityCurrencies").empty().text(data.countCurrencies);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown);
+        }
+    });
+}
+
+function deleteUsers(usersId) {
+    $.ajax({
+        url: "/api/admin/users",
+        type: "DELETE",
+        headers: createAuthorizationTokenHeader(),
+        data: JSON.stringify(usersId),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            loadData(0);
+            loadPages("#pages");
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown)
+        }
+    });
+}
+
+function deleteCurrencies(usersId) {
+    $.ajax({
+        url: "/api/admin/currency",
+        type: "DELETE",
+        headers: createAuthorizationTokenHeader(),
+        data: JSON.stringify(usersId),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            loadCurrencyData(0);
+            loadPages("#pagesCurrency");
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorShowForm(jqXHR, textStatus, errorThrown)
+        }
+    });
+}
+
+function addCurrency(newCurrency) {
+    $.ajax({
+        url: "/api/admin/currency",
+        type: "POST",
+        headers: createAuthorizationTokenHeader(),
+        data: JSON.stringify(newCurrency),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            $("#addCurrencyModal").modal('hide');
+            loadCurrencyData(0);
+            loadPages("#pagesCurrency");
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            modalInputError(jqXHR, "#modalAddCurrencyErrorText");
+        }
+    });
+}
+
+function editCurrency(currencyId, editedCurrency) {
+    $.ajax({
+        url: "/api/admin/currency/" + currencyId,
+        type: "PUT",
+        headers: createAuthorizationTokenHeader(),
+        data: JSON.stringify(editedCurrency),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            $("#editCurrencyModal").modal('hide');
+            loadCurrencyData(0);
+            loadPages("#pagesCurrency");
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            modalInputError(jqXHR, "#modalEditCurrencyErrorText");
+        }
+    });
+}
+
+function errorShowForm(jqXHR, textStatus, errorThrown) {
+    if (jqXHR.status === 401) {
+        console.log("HTTP Status 401: " + jqXHR.responseJSON.message);
+    } else if (jqXHR.status === 403) {
+        console.log("Access to Endpoint is Forbidden");
+        console.log("HTTP Status 403: " + textStatus);
+        window.location.replace("/login.html");
+    } else if (jqXHR.status === 404) {
+        console.log("HTTP Status 404: " + jqXHR.responseJSON.message);
+    } else if (jqXHR.status === 302) {
+        console.log("HTTP Status 302: " + jqXHR.responseJSON.message + jqXHR.getAllResponseHeaders());
+    } else if (jqXHR.status === 500) {
+        console.log("HTTP Status 500 - Redirect page to LOGIN PAGE by STATE " + jqXHR.readyState + " StatusText " + jqXHR.statusText);
+        window.location.replace("/login.html");
+    } else if (jqXHR.status === 200 && textStatus === "parsererror") {
+        console.log("Redirect page to ... by STATE " + jqXHR.readyState + " StatusText " + jqXHR.statusText);
+        window.location.replace("/login.html");
+    } else {
+        console.log("an unexpected error occurred: " + jqXHR.status + " " + textStatus + " " + errorThrown);
+    }
+}
 
 $("#logoutButton").click(doLogout);
 
-$("#exampleServiceBtn").click(function () {
-    $.ajax({
-        url: "/api/person",
-        type: "GET",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        headers: createAuthorizationTokenHeader(),
-        success: function (data, textStatus, jqXHR) {
-            showResponse(jqXHR.status, JSON.stringify(data));
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            showResponse(jqXHR.status, jqXHR.responseJSON.message)
-        }
-    });
-});
-
-$("#adminServiceBtn").click(function () {
-    $.ajax({
-        url: "/api/hiddenmessage",
-        type: "GET",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        headers: createAuthorizationTokenHeader(),
-        success: function (data, textStatus, jqXHR) {
-            showResponse(jqXHR.status, data);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            showResponse(jqXHR.status, jqXHR.responseJSON.message)
-        }
-    });
-});
-
-$loggedIn.click(function () {
-    $loggedIn
-        .toggleClass("text-hidden")
-        .toggleClass("text-shown");
-});
-
-// INITIAL CALLS =============================================================
-if (getJwtToken()) {
-    // $login.hide();
-    // $notLoggedIn.hide();
-    // showTokenInformation();
-    // showUserInformation();
-}

@@ -6,7 +6,6 @@ import com.okdev.ems.models.embeddedID.BudgetId;
 import javax.persistence.*;
 
 @Entity
-//@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"year", "month", "category_id"})})
 public class Budgets {
 
     @EmbeddedId

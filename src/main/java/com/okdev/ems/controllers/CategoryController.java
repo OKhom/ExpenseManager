@@ -5,6 +5,7 @@ import com.okdev.ems.dto.results.ResultDTO;
 import com.okdev.ems.dto.results.SuccessResult;
 import com.okdev.ems.models.enums.CategoryType;
 import com.okdev.ems.services.CategoryService;
+import com.okdev.ems.services.CurrencyService;
 import com.okdev.ems.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,9 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/category")
@@ -25,6 +24,9 @@ public class CategoryController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    CurrencyService currencyService;
 
     @GetMapping("")
     public ResponseEntity<List<CategoryDTO>> getAllCategories(HttpServletRequest request) {
@@ -126,28 +128,23 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}/subcategory/{subcategoryId}")
-    ResponseEntity<Map<String, Boolean>> removeSubcategory(HttpServletRequest request,
+    ResponseEntity<ResultDTO> removeSubcategory(HttpServletRequest request,
                                                            @PathVariable("categoryId") Long categoryId,
                                                            @PathVariable("subcategoryId") Long subcategoryId) {
         Long userId = userService.getUserId(request);
         categoryService.removeSubcategory(userId, categoryId, subcategoryId);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("success", true);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessResult(), HttpStatus.OK);
     }
 
     @GetMapping("/currency")
-    ResponseEntity<List<CurrencyDTO>> fetchAllCurrencies(HttpServletRequest request) {
-        Long userId = userService.getUserId(request);
-        List<CurrencyDTO> currency = categoryService.fetchAllCurrencies();
+    ResponseEntity<List<CurrencyDTO>> fetchAllCurrencies() {
+        List<CurrencyDTO> currency = currencyService.fetchAllCurrencies();
         return new ResponseEntity<>(currency, HttpStatus.OK);
     }
 
     @GetMapping("/currency/{currencyId}")
-    ResponseEntity<CurrencyDTO> fetchCurrencyById(HttpServletRequest request,
-                                                  @PathVariable("currencyId") Long currencyId) {
-        Long userId = userService.getUserId(request);
-        CurrencyDTO currency = categoryService.fetchCurrencyById(currencyId);
+    ResponseEntity<CurrencyDTO> fetchCurrencyById(@PathVariable("currencyId") Long currencyId) {
+        CurrencyDTO currency = currencyService.fetchCurrencyById(currencyId);
         return new ResponseEntity<>(currency, HttpStatus.OK);
     }
 }

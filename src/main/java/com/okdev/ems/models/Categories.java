@@ -3,13 +3,10 @@ package com.okdev.ems.models;
 import com.okdev.ems.dto.CategoryDTO;
 import com.okdev.ems.dto.SubcategoryDTO;
 import com.okdev.ems.models.enums.CategoryType;
-import com.okdev.ems.repositories.CurrencyRepository;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

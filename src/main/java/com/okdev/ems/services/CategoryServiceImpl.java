@@ -110,7 +110,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public List<SubcategoryDTOext> fetchAllSubcategories(Long userId, Long categoryId) {
-        System.out.println("User ID is " + userId + ", Category ID is " + categoryId);
         return subcategoryRepository.findAll(userId, categoryId).stream().map(Subcategories::toDTOext).collect(Collectors.toList());
     }
 
@@ -166,22 +165,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CurrencyDTO> fetchAllCurrencies() {
-        return currencyRepository.findAll().stream().map(Currencies::toDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public CurrencyDTO fetchCurrencyById(Long currencyId) throws EmsResourceNotFoundException {
-        try {
-            return currencyRepository.getOne(currencyId).toDTO();
-        } catch (NullPointerException npe) {
-            throw new EmsResourceNotFoundException("Currency ID not found");
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public AmountDTO getTotalAmountByDate(Long userId, Integer year, Integer month) throws EmsResourceNotFoundException {
         Users user = userRepository.findUserById(userId);
         LocalDate currentMonth = LocalDate.of(year, month, 1);
@@ -193,23 +176,25 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public Double amount(Users user, CategoryType type, LocalDate currentMonth) {
-        String currencyDefault = user.getCurrency().getShortName();
-        List<CategoryDTO> categoryList = categoryRepository.findByType(user.getUserId(), type).stream()
-                .map(c -> c.toDTObyDate(currentMonth))
-                .collect(Collectors.toList());
         Double amount = 0D;
-        try {
-            for (CategoryDTO category : categoryList) {
-                Double currencyRate;
-                if (!user.getCurrency().getCurrencyId().equals(category.getCurrencyId())) {
-                    currencyRate = exchangeRates.currentRate(currencyDefault, currencyRepository.getOne(category.getCurrencyId()).getShortName());
-                } else {
-                    currencyRate = 1D;
+        if (user.getCurrency() != null) {
+            String currencyDefault = user.getCurrency().getShortName();
+            List<CategoryDTO> categoryList = categoryRepository.findByType(user.getUserId(), type).stream()
+                    .map(c -> c.toDTObyDate(currentMonth))
+                    .collect(Collectors.toList());
+            try {
+                for (CategoryDTO category : categoryList) {
+                    Double currencyRate;
+                    if (!user.getCurrency().getCurrencyId().equals(category.getCurrencyId())) {
+                        currencyRate = exchangeRates.currentRate(currencyDefault, currencyRepository.getOne(category.getCurrencyId()).getShortName());
+                    } else {
+                        currencyRate = 1D;
+                    }
+                    amount += category.getTotalExpense() * currencyRate;
                 }
-                amount += category.getTotalExpense() * currencyRate;
+            } catch (IOException e) {
+                throw new EmsBadRequestException("Currency Rate request is invalid");
             }
-        } catch (IOException e) {
-            throw new EmsBadRequestException("Currency Rate request is invalid");
         }
         return amount;
     }

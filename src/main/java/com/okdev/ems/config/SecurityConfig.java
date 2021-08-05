@@ -2,14 +2,13 @@ package com.okdev.ems.config;
 
 import com.okdev.ems.config.jwt.JwtAuthenticationSuccessHandler;
 import com.okdev.ems.config.jwt.JwtFilter;
-import com.okdev.ems.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -17,20 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private JwtFilter jwtFilter;
-
-//    @Autowired
-//    public void registerGlobalAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-//                .userDetailsService(userDetailsService)
-//                .passwordEncoder(passwordEncoder);
-//    }
 
     private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
 
@@ -45,28 +31,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/users/id").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/api/category").hasRole("USER")
-                .antMatchers("/admin/*").hasRole("ADMIN")
-                .antMatchers("/user/*").hasRole("USER")
-                .antMatchers("/", "/index.html", "/api/users/register", "/api/users/auth", "/login", "/registration", "/js/**", "/css/**", "/vendor/**", "/fonts/**", "/images/**").permitAll()
-//                .anyRequest().authenticated()
+                .antMatchers("/api/admin/*").hasRole("ADMIN")
+                .antMatchers("/api/users/id").hasRole("USER")
+                .antMatchers("/api/category/*").hasRole("USER")
+                .antMatchers("/api/transaction/*").hasRole("USER")
+                .antMatchers("/api/users/register").permitAll()
+                .antMatchers("/api/users/auth").permitAll()
+                .antMatchers("/index.html").permitAll()
+                .antMatchers("/admin.html").permitAll()
+                .antMatchers("/login.html").permitAll()
+                .antMatchers("/registration.html").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().accessDeniedPage("/login.html")
                 .and()
         .formLogin()
                 .loginPage("/login.html")
-//                .loginProcessingUrl("/api/users/auth")
-//                .failureUrl("/login?error")
                 .usernameParameter("email")
                 .passwordParameter("password")
-//                .defaultSuccessUrl("/index.html")
                 .successHandler(jwtAuthenticationSuccessHandler)
-//                .permitAll()
                 .and()
         .logout()
-//                .permitAll()
-                .logoutUrl("/logout")
                 .logoutSuccessUrl("/login.html")
                 .and()
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    public void configure(WebSecurity web) throws Exception {
+        // Allow resources to be accessed without authentication
+        web.ignoring()
+                .antMatchers("/js/**")
+                .antMatchers("/css/**")
+                .antMatchers("/vendor/**")
+                .antMatchers("/fonts/**")
+                .antMatchers("/images/**");
     }
 }

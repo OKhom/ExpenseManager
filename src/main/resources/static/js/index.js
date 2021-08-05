@@ -1,14 +1,17 @@
 $(document).ready(function(){
-    var currentDate = new Date();
-	setCurrentMonth(currentDate.getMonth());
+    let currentDate = new Date();
+    setCurrentMonth(currentDate.getMonth());
 	setCurrentYear(currentDate.getFullYear());
 	setCategoryType(0);
 
 	$("#container-transactions").hide();
 	$("#searchDropdown").hide();
 	$("#currentDateView").text(getMonthName(getCurrentMonth()) + " " + getCurrentYear());
-	$("#categoryHead").empty().text('Expense');
+	$("#categoryHead").empty().text('CATEGORIES - Expense');
 	showUserInformation(function (data) {
+        if (data.role == "ADMIN") {
+            window.location.assign("/admin.html");
+        }
         $("#navUserName").text(data.firstName + " " + data.lastName);
         $("#firstNameProfile").text(data.firstName);
         $("#lastNameProfile").text(data.lastName);
@@ -19,18 +22,6 @@ $(document).ready(function(){
     });
     loadCategoryCards();
     loadTotalAmount();
-	
-    // $.getJSON('/account', function(data) {
-    //     $('#login').text(data.email);
-    //     $("#avatar").attr("src", data.pictureUrl);
-    // });
-    // console.log("/index.html loaded...")
-
-    // assignButtons();
-    // loadPages();
-    // loadData(0);
-    // focusInput();
-    // validateInput();
 });
 
 (function($) {
@@ -42,23 +33,33 @@ $(document).ready(function(){
     $(".sidebar").toggleClass("toggled");
     if ($(".sidebar").hasClass("toggled")) {
       $('.sidebar .collapse').collapse('hide');
-    };
+    }
     });
   
     // Initialize Bootstrap DatePicker
     $('#inputDate').datepicker({
     weekStart: 1,
     todayBtn: "linked",
-    language: "uk",
-    // language: "us",
+    // language: "uk",
     daysOfWeekHighlighted: "0,6",
     autoclose: true,
     todayHighlight: true
     }).datepicker("setDate", new Date());
-  
+
+    // Toggle Home Button
+    $("#selectHome").on('click', function () {
+        showUserInformation(function (data) {
+            if (data.role == "ADMIN") {
+                window.location.assign("/admin.html");
+            } else {
+                window.location.assign("/index.html");
+            }
+        });
+    })
+
     // Toggle Current Month
     $("#currentDateView").click(function() {
-        var currentDate = new Date();
+        let currentDate = new Date();
         setCurrentMonth(currentDate.getMonth());
         setCurrentYear(currentDate.getFullYear());
         $("#currentDateView").empty().text(getMonthName(getCurrentMonth()) + " " + getCurrentYear());
@@ -127,26 +128,18 @@ $(document).ready(function(){
                     );
             }
         });
-        console.log("Add Budget: Category is " + getCurrentCategoryID());
         $("#addTransactionModal").modal('show');
     })
 
     // Toggle Add Transaction Button
     $("#submitNewTransaction").on('click', function () {
-        console.log("Modal Transaction (Add Menu): Category is " + getCurrentCategoryID());
         if (parseFloat($("#transactionAmount").val()) > 0) {
-            let transactionDate = $("#transactionDate").val();
-            let pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
-            // console.log("Transaction Date is " + transactionDate);
-            // console.log("Date $1 is " + transactionDate.replace(pattern, '$1'));
-            // console.log("Date $2 is " + transactionDate.replace(pattern, '$2'));
-            // console.log("Date $3 is " + transactionDate.replace(pattern, '$3'));
-            // console.log("Date $3-$2-$1 is " + transactionDate.replace(pattern, '$3-$2-$1'));
-            // console.log("Date NEW is " + new Date(transactionDate.replace(pattern, '$3-$2-$1')));
+            let pattern = /(\d{2})\/(\d{2})\/(\d{4})/;
+            // let pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
             let newTransaction = {
                 amount: $("#transactionAmount").val(),
                 note: $("#inputDescription").val(),
-                date: new Date(transactionDate.replace(pattern, '$3-$2-$1'))
+                date: $("#transactionDate").val().replace(pattern, '$3-$1-$2')
             }
             let currentCategoryID = getCurrentCategoryID();
             let currentSubcategory;
@@ -175,8 +168,6 @@ $(document).ready(function(){
     $("#transactionCards").on('click', '#selectEditTransaction', function() {
         setCurrentCategoryID($(this).data('cat'));
         setCurrentTransactionID($(this).data('id'));
-        console.log("Transaction Edit: Category ID is " + getCurrentCategoryID());
-        console.log("Transaction Edit: Transaction ID is " + getCurrentTransactionID());
         loadSubcategories(function (data) {
             $('#listEditedSubcategory').empty()
                 .append($('<option>').attr('selected', '').attr('value', '0')
@@ -197,8 +188,7 @@ $(document).ready(function(){
             $('#editDate').datepicker({
                 weekStart: 1,
                 todayBtn: "linked",
-                language: "uk",
-                // language: "en",
+                // language: "uk",
                 daysOfWeekHighlighted: "0,6",
                 autoclose: true,
                 todayHighlight: true
@@ -209,23 +199,21 @@ $(document).ready(function(){
 
     // Toggle Edit Transaction Button
     $("#submitUpdateTransaction").on('click', function () {
-        console.log("Modal Transaction (Edit Menu): Category is " + getCurrentCategoryID());
         if (parseFloat($("#editTransactionAmount").val()) > 0) {
-            let transactionDate = $("#editTransactionDate").val();
-            let pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
-            let newTransaction = {
+            let pattern = /(\d{2})\/(\d{2})\/(\d{4})/;
+            // let pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+            let editedTransaction = {
                 amount: $("#editTransactionAmount").val(),
                 note: $("#inputEditedDescription").val(),
-                date: new Date(transactionDate.replace(pattern, '$3-$2-$1'))
+                date: $("#editTransactionDate").val().replace(pattern, '$3-$1-$2')
             }
-            // let currentCategoryID = getCurrentCategoryID();
             let currentSubcategory;
             if ($("#listEditedSubcategory").val() == 0) {
                 currentSubcategory = null;
             } else {
                 currentSubcategory = $("#listEditedSubcategory").val();
             }
-            editTransaction(newTransaction, currentSubcategory);
+            editTransaction(editedTransaction, currentSubcategory);
         } else {
             $("#modalEditTransactionErrorText").text("Transaction amount is empty or invalid. Try again...");
         }
@@ -246,8 +234,6 @@ $(document).ready(function(){
     $("#transactionCards").on('click', '#selectDeleteTransaction', function() {
         setCurrentCategoryID($(this).data('cat'));
         setCurrentTransactionID($(this).data('id'));
-        console.log("Transaction Delete: Category ID is " + getCurrentCategoryID());
-        console.log("Transaction Delete: Transaction ID is " + getCurrentTransactionID());
         loadTransactionById(function (data) {
             $('#deleteTransactionHeader').empty().append(data.categoryName).append(" - delete Transaction");
             $('#deletedSubcategory').empty().val(data.subcategory);
@@ -260,7 +246,6 @@ $(document).ready(function(){
 
     // Toggle Delete Transaction Button
     $("#submitDeleteTransaction").on('click', function () {
-        console.log("Modal Transaction (Delete Menu): Transaction is " + getCurrentTransactionID());
         deleteTransaction();
     })
 
@@ -301,7 +286,6 @@ $(document).ready(function(){
     $("#addBudgetModal").on('hidden.bs.modal', function () {
         setCurrentCategoryID(null);
         let modal = $(this);
-        // modal.find('select').val('0');
         modal.find('input').val('').end();
         $("#modalBudgetErrorText").empty();
     })
@@ -333,7 +317,6 @@ $(document).ready(function(){
     $("#editBudgetModal").on('hidden.bs.modal', function () {
         setCurrentCategoryID(null);
         let modal = $(this);
-        // modal.find('select').val('0');
         modal.find('input').val('').end();
         $("#modalEditBudgetErrorText").empty();
     })
@@ -361,7 +344,6 @@ $(document).ready(function(){
     $("#deleteBudgetModal").on('hidden.bs.modal', function () {
         setCurrentCategoryID(null);
         let modal = $(this);
-        // modal.find('select').val('0');
         modal.find('input').val('').end();
         $("#modalDeleteBudgetErrorText").empty();
     })
@@ -369,7 +351,6 @@ $(document).ready(function(){
     // Call Add Subcategory Modal Form
     $("#categoryCards").on('click', '#selectAddSubcategory', function() {
         setCurrentCategoryID($(this).data('id'));
-        console.log("Add Subcategory: Category is " + getCurrentCategoryID());
         loadCategoryById(function (data) {
             $('#addSubcategoryHeader').empty().append(data.name).append(" - add subcategory");
         });
@@ -378,7 +359,6 @@ $(document).ready(function(){
 
     // Toggle New Subcategory Button
     $("#submitNewSubcategory").on('click', function () {
-        console.log("Modal Subcategory (Add Menu): Category is " + getCurrentCategoryID());
         if ($("#inputSubcategory").val() != "") {
             let newSubcategory = {
                 subname: $("#inputSubcategory").val()
@@ -388,14 +368,12 @@ $(document).ready(function(){
         } else {
             $("#modalSubcategoryErrorText").text("Subcategory name is empty. Try again...");
         }
-        // $("#addSubcategoryModal").modal('hide');
     })
 
     // Clear Add Subcategory Modal Form
     $("#addSubcategoryModal").on('hidden.bs.modal', function () {
         setCurrentCategoryID(null);
         let modal = $(this);
-        // modal.find('select').val('0');
         modal.find('input').val('').end();
         $("#modalSubcategoryErrorText").empty();
     })
@@ -403,7 +381,6 @@ $(document).ready(function(){
     // Show Update Subcategory Modal
     $("#categoryCards").on('click', '#selectEditSubcategory', function() {
         setCurrentCategoryID($(this).data('id'));
-        console.log("Update Subcategory: Category is " + getCurrentCategoryID());
         loadCategoryById(function (data) {
             $('#updateSubcategoryHeader').empty().append(data.name).append(" - update subcategory");
         });
@@ -424,13 +401,11 @@ $(document).ready(function(){
 
     // Update Subcategory Request
     $("#submitUpdateSubcategory").on('click', function () {
-        console.log("Modal Subcategory (Update Menu): Category is " + getCurrentCategoryID());
         if ($("#listUpdatingSubcategory").val() != 0 && $("#updatedSubcategory").val() != "") {
             let updatingSubcategory = $("#listUpdatingSubcategory").val();
             let newSubcategory = {
                 subname: $("#updatedSubcategory").val()
             }
-            // let currentCategoryID = getCurrentCategoryID();
             updateSubcategory(updatingSubcategory, newSubcategory);
         } else {
             $("#modalUpdateSubcategoryErrorText").text("Old or New Subcategory name is empty. Try again...");
@@ -449,7 +424,6 @@ $(document).ready(function(){
     // Show Delete Subcategory Modal
     $("#categoryCards").on('click', '#selectDeleteSubcategory', function() {
         setCurrentCategoryID($(this).data('id'));
-        console.log("Delete Subcategory: Category is " + getCurrentCategoryID());
         loadCategoryById(function (data) {
             $('#deleteSubcategoryHeader').empty().append(data.name).append(" - delete subcategory");
         });
@@ -470,7 +444,6 @@ $(document).ready(function(){
 
     // Delete Subcategory Request
     $("#submitDeleteSubcategory").on('click', function () {
-        console.log("Modal Subcategory (Delete Menu): Category is " + getCurrentCategoryID());
         if ($("#listDeletedSubcategory").val() != 0) {
             let deletedSubcategory = $("#listDeletedSubcategory").val();
             deleteSubcategory(deletedSubcategory);
@@ -484,7 +457,6 @@ $(document).ready(function(){
         setCurrentCategoryID(null);
         let modal = $(this);
         modal.find('select').val('0');
-        // modal.find('input').val('').end();
         $("#modalDeleteSubcategoryErrorText").empty();
     })
 
@@ -519,7 +491,6 @@ $(document).ready(function(){
                 "currencyId": currencyId
             };
             let currentCategoryType = getCategoryType();
-            console.log("New Category is {" + newCategory.name + ", " + newCategory.description + ", " + newCategory.currencyId + "}");
             addCategory(newCategory, currentCategoryType);
         } else {
             $("#modalErrorText").text("Category name is empty. Try again...");
@@ -537,7 +508,6 @@ $(document).ready(function(){
     // Show Edit Category Modal
     $("#categoryCards").on('click', '#selectEditCategory', function() {
         setCurrentCategoryID($(this).data('id'));
-        console.log("Edit Category: Category is " + getCurrentCategoryID());
         loadAllCurrencies(function (data) {
             $('#inputNewCategoryCurrency').empty()
                 .append($('<option>').attr('selected', '').attr('value', '0')
@@ -573,7 +543,6 @@ $(document).ready(function(){
                 "description": $("#inputNewCategoryDescription").val(),
                 "currencyId": currencyId
             };
-            // let currentCategoryType = getCategoryType();
             updateCategory(updatedCategory);
         } else {
             $("#modalEditCategoryErrorText").text("Category name is empty. Try again...");
@@ -591,7 +560,6 @@ $(document).ready(function(){
     // Show Delete Category Modal
     $("#categoryCards").on('click', '#selectDeleteCategory', function() {
         setCurrentCategoryID($(this).data('id'));
-        console.log("Delete Category: Category is " + getCurrentCategoryID());
         loadCategoryById(function (data) {
             $('#deleteCategoryHeader').empty().append(data.name).append(" - delete category");
         });
@@ -600,7 +568,6 @@ $(document).ready(function(){
 
     // Delete Category Request
     $("#submitDeleteCategory").on('click', function () {
-        console.log("Modal Category (Delete Menu): Category is " + getCurrentCategoryID());
         let deleteCategoryWithAllTransactions = false;
         if ($("#deleteCategoryWithAllTransactions").is(":checked")) {
             deleteCategoryWithAllTransactions = true;
@@ -608,16 +575,12 @@ $(document).ready(function(){
         let deleteCategoryMode = {
             deleteWithAllTransaction: deleteCategoryWithAllTransactions
         };
-        console.log(deleteCategoryMode);
         deleteCategory(deleteCategoryMode);
     })
 
     // Clear Delete Category Modal Form
     $("#deleteCategoryModal").on('hidden.bs.modal', function () {
         setCurrentCategoryID(null);
-        // let modal = $(this);
-        // modal.find('select').val('0');
-        // modal.find('input').val('').end();
         $("#deleteCategoryWithAllTransactions").prop("checked", false);
         $("#modalDeleteCategoryErrorText").empty();
     })
@@ -625,7 +588,6 @@ $(document).ready(function(){
 
     // Show Edit User Modal
     $("#selectEditUser").on('click', function() {
-        console.log("Edit User: Currency is " + getUserCurrency());
         loadAllCurrencies(function (data) {
             $('#inputNewUserCurrency').empty()
                 .append($('<option>').attr('selected', '').attr('value', '0')
@@ -663,7 +625,6 @@ $(document).ready(function(){
                 "lastName": $("#inputNewLastName").val(),
                 "currencyId": currencyId
             };
-            // let currentCategoryType = getCategoryType();
             updateUser(updatedUser);
         } else {
             $("#modalEditUserErrorText").text("User's FirstName or LastName is empty. Try again...");
@@ -684,9 +645,9 @@ $(document).ready(function(){
             $("#container-transactions").hide();
             $("#container-categories").show();
             if (getCategoryType() == 0) {
-                $("#categoryHead").empty().text('Expense');
+                $("#categoryHead").empty().text('CATEGORIES - Expense');
             } else {
-                $("#categoryHead").empty().text('Income');
+                $("#categoryHead").empty().text('CATEGORIES - Income');
             }
             loadCategoryCards();
         }
@@ -705,7 +666,7 @@ $(document).ready(function(){
     $("#select-income").click(function(e) {
         if ($("#container-categories").is(":visible")) {
             setCategoryType(1);
-            $("#categoryHead").empty().text('Income');
+            $("#categoryHead").empty().text('CATEGORIES - Income');
             loadCategoryCards();
         }
     });
@@ -714,7 +675,7 @@ $(document).ready(function(){
     $("#select-expense").click(function(e) {
         if ($("#container-categories").is(":visible")) {
             setCategoryType(0);
-            $("#categoryHead").empty().text('Expense');
+            $("#categoryHead").empty().text('CATEGORIES - Expense');
             loadCategoryCards();
         }
     });
@@ -736,17 +697,17 @@ $(document).ready(function(){
   // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
   $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function(e) {
     if ($(window).width() > 768) {
-      var e0 = e.originalEvent,
-        delta = e0.wheelDelta || -e0.detail;
-      this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+        let e0 = e.originalEvent,
+            delta = e0.wheelDelta || -e0.detail;
+        this.scrollTop += (delta < 0 ? 1 : -1) * 30;
       e.preventDefault();
     }
   });
 
   // Scroll to top button appear
   $(document).on('scroll', function() {
-    var scrollDistance = $(this).scrollTop();
-    if (scrollDistance > 100) {
+      let scrollDistance = $(this).scrollTop();
+      if (scrollDistance > 100) {
       $('.scroll-to-top').fadeIn();
     } else {
       $('.scroll-to-top').fadeOut();
@@ -755,8 +716,8 @@ $(document).ready(function(){
 
   // Smooth scrolling using jQuery easing
   $(document).on('click', 'a.scroll-to-top', function(e) {
-    var $anchor = $(this);
-    $('html, body').stop().animate({
+      let $anchor = $(this);
+      $('html, body').stop().animate({
       scrollTop: ($($anchor.attr('href')).offset().top)
     }, 1000, 'easeInOutExpo');
     e.preventDefault();

@@ -33,10 +33,6 @@ public interface CategoryService {
 
     void removeSubcategory(Long userId, Long categoryId, Long subcategoryId) throws EmsResourceNotFoundException;
 
-    List<CurrencyDTO> fetchAllCurrencies();
-
-    CurrencyDTO fetchCurrencyById(Long currencyId) throws EmsResourceNotFoundException;
-
     AmountDTO getTotalAmountByDate(Long userId, Integer year, Integer month) throws EmsResourceNotFoundException;
 
     Double amount(Users user, CategoryType type, LocalDate currentMonth);

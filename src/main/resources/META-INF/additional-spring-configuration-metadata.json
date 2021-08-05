@@ -1,8 +1,0 @@
-{
-  "properties": [
-    {
-      "name": "exchangeRate.apiAccessKey",
-      "type": "java.lang.String",
-      "description": "Description for exchangeRate.apiAccessKey."
-  }
-] }

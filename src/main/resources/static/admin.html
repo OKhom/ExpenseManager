@@ -32,12 +32,11 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#" id="selectHome" role="button">
                 <div class="sidebar-brand-icon">
                     <i class="fas fa-home"></i>
                 </div>
 				<div class="sidebar-brand-text mx-3">OK-Expense</div>
-                <!-- <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div> -->
             </a>
 
             <!-- Divider -->
@@ -45,49 +44,40 @@
 			
 			<!-- Heading -->
             <div class="sidebar-heading mb-2">
-                Total Balance
+                Total
             </div>
 			
 			<!-- Nav Item - Expense Dashboard -->
 			<li class="nav-item mb-3">
-                <a class="nav-link py-0 mb-1" href="#" id="select-income" role="button">
-					<span class="text-xs text-success">Income: </span>
-					<span class="text-xs text-success" id="amountIncome"></span></a>
-				<a class="nav-link py-0" href="#" id="select-expense" role="button">
-					<span class="text-xs text-warning">Expense: </span>
-					<span class="text-xs text-warning" id="amountExpense"></span></a>
+                <a class="nav-link py-0 mb-1">
+					<span class="text-xs text-success">Users: </span>
+					<span class="text-xs text-success" id="quantityUsers"></span></a>
+				<a class="nav-link py-0">
+					<span class="text-xs text-warning">Currencies: </span>
+					<span class="text-xs text-warning" id="quantityCurrencies"></span></a>
             </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Interface
+            <div class="sidebar-heading mb-2">
+                Admin Interfaces
             </div>
 			
-            <!-- Nav Item - Categories -->
+            <!-- Nav Item - Users -->
             <li class="nav-item">
-                <a class="nav-link" href="#" id="selectCategories" role="button">
+                <a class="nav-link py-1" href="#" id="selectUsers" role="button">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Categories</span></a>
+                    <span>Users</span></a>
             </li>
 			
-            <!-- Nav Item - Transactions -->
+            <!-- Nav Item - Currencies -->
             <li class="nav-item">
-                <a class="nav-link" href="#" id="selectTransactions" role="button">
-                    <!-- <i class="fas fa-fw fa-list"></i> -->
+                <a class="nav-link py-1 mb-3" href="#" id="selectCurrencies" role="button">
 					<i class="fas fa-fw fa-layer-group"></i>
-					<!-- <i class="fas fa-fw fa-draw-polygon"></i> -->
-                    <span>Operations</span></a>
+                    <span>Currencies</span></a>
             </li>
-
-            <!-- Nav Item - Budget -->
-<!--            <li class="nav-item">-->
-<!--                <a class="nav-link" href="#" id="select-budgets" role="button">-->
-<!--                    <i class="fas fa-fw fa-tachometer-alt"></i>-->
-<!--                    <span>Budgets</span></a>-->
-<!--            </li>-->
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -115,18 +105,18 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <!-- <form
+                    <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" id="searchTopbar">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
+                            <input type="text" class="form-control bg-light border-0 small" id="inputSearchTopbar"
+                                   placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-primary" type="button" id="submitSearchTopbar">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
                         </div>
-                    </form> -->
+                    </form>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -138,15 +128,15 @@
                                 <i class="fas fa-search fa-fw"></i>
                             </a>
                             <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" id="searchDropdownMenu"
                                 aria-labelledby="searchDropdown">
                                 <form class="form-inline mr-auto w-100 navbar-search">
                                     <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
+                                        <input type="text" class="form-control bg-light border-0 small" id="inputSearchDropdown"
                                             placeholder="Search for..." aria-label="Search"
                                             aria-describedby="basic-addon2">
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
+                                            <button class="btn btn-primary" type="button" id="submitSearchDropdown">
                                                 <i class="fas fa-search fa-sm"></i>
                                             </button>
                                         </div>
@@ -154,27 +144,6 @@
                                 </form>
                             </div>
                         </li>
-						
-						<!-- Nav Item - Previous Month -->
-						<li class="nav-item">
-							<a class="nav-link px-0" href="#" id="monthPrevious" role="button">
-								<i class="fas text-gray-600 fa-fw fa-chevron-left"></i>
-								</a>
-						</li>
-			
-						<!-- Nav Item - Current Month -->
-						<li class="nav-item">
-							<div class="nav-link px-2" href="#" role="button">
-							<span class="text-xl text-center text-gray-600 font-weight-bolder" id="currentDateView"></span>
-                            </div>
-						</li>
-												
-						<!-- Nav Item - Next Month -->
-						<li class="nav-item">
-							<a class="nav-link px-0" href="#" id="monthNext" role="button">
-								<i class="fas text-gray-600 fa-fw fa-chevron-right"></i>
-								</a>
-						</li>
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
@@ -182,7 +151,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-primary small" id="navUserName"></span>
+                                <span class="mr-2 d-none d-lg-inline text-secondary small" id="navUserName"></span>
                                 <img class="img-profile rounded-circle"
                                     src="images/undraw_profile.svg">
                             </a>
@@ -198,40 +167,92 @@
                                     Edit Profile
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="#" role="button" id="logoutButton">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
-
                 </nav>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid" id="container-categories">
-				
-					<!-- Page Expense -->
-					<div class="container-fluid px-0" id="categories-expense">
-					
-						<!-- Page Heading -->
-						<div class="row mx-0 mb-3 d-flex flex-row align-items-start justify-content-between">
-							<h3 class="h3 mb-0 mr-3 font-weight-bold text-gray-600" id="categoryHead">ADMIN Page</h3>
-						</div>
+                <div class="container-fluid" id="containerUsers">
+                    <div class="row mx-0 mb-2 d-flex flex-row align-items-start justify-content-between">
 
-						<!-- Category Cards View -->
-						<div class="row" id="categoryCards"></div>
+                        <!-- ADMIN Head -->
+                        <h4 class="text mt-2 font-weight-bold text-gray-600">ADMIN - Users</h4>
 
-					</div>
+                        <!-- Users Action Button -->
+                        <nav class="navbar navbar-expand navbar-light bg-light py-0">
+                            <button type="button" class="btn btn-outline-secondary" id="btnUsersDelete">Delete Users</button>
+                        </nav>
+                    </div>
+
+                    <table id="dataUsers" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Check</th>
+                            <th scope="col">E-Mail</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Currency</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light px-0" id="pageUsersNavbar" aria-label="Page navigation">
+                        <div class="row px-3 mb-0 align-items-baseline">
+                            <div class="text mr-2">Pages:</div>
+                            <ul id="pages" class="pagination mb-0"></ul>
+                        </div>
+                    </nav>
+                </div>
+
+                <!-- Page Currencies Admin -->
+                <div class="container-fluid" id="containerCurrencies">
+                    <div class="row mx-0 mb-2 d-flex flex-row align-items-start justify-content-between">
+
+                        <!-- ADMIN Head -->
+                        <h4 class="text mt-2 font-weight-bold text-gray-600">ADMIN - Currencies</h4>
+
+                        <!-- Currencies Action Button -->
+                        <nav class="navbar navbar-expand navbar-light bg-light py-0">
+                            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                <button type="button" class="btn btn-outline-secondary" id="btnCurrencyAdd">Add currency</button>
+                                <button type="button" class="btn btn-outline-secondary" id="btnCurrencyEdit">Edit currency</button>
+                                <button type="button" class="btn btn-outline-secondary" id="btnCurrencyDelete">Delete currency</button>
+                            </div>
+                        </nav>
+                    </div>
+
+                    <table id="dataCurrencies" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Check</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Short Name</th>
+                            <th scope="col">Sign</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light px-0" id="pageCurrencyNavbar" aria-label="Page navigation">
+                        <div class="row px-3 mb-0 align-items-baseline">
+                            <div class="text mr-2">Pages:</div>
+                            <ul id="pagesCurrency" class="pagination mb-0"></ul>
+                        </div>
+                    </nav>
                 </div>
 
             </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            <footer class="sticky-footer bg-white py-2">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; OK-Software 2021</span>
@@ -250,403 +271,127 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-	
-	<!-- Bootstrap Modal - Add Transaction -->
-    <div id="addTransactionModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="addTransactionHeader"></h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-                </div>
-                <div class="modal-body">
-					<form class="user">
-						<div class="input-group mb-3">
-							<select class="custom-select px-4 py-2" id="listSubcategory"></select>
-						</div>
-						<div class="form-group">
-							<input type="text" class="form-control form-control-category px-4"
-								id="inputDescription" placeholder="Description" maxlength=25>
-						</div>
-						<div class="form-group">
-							<div class="row mb-3 no-gutters align-items-center d-flex flex-row justify-content-between">
-								<div class="input-group-half">
-									<input type="number" class="form-control form-control-category px-4" id="transactionAmount"
-										step="0.01" placeholder="Amount" />
-								</div>
-								<div class="input-group-half date" id="inputDate">
-									<input type="text" class="form-control form-control-category px-4" id="transactionDate" />
-									<span class="input-group-addon">
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span>
-								</div>
-							</div>
-						</div>
-						<span class="text-danger" id="modalTransactionErrorText"></span>
-						<hr>
-						<button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitNewTransaction">Add transaction</button>
-					</form>
-                </div>
-<!--                <div class="modal-footer">-->
-<!--					<form class="user">-->
-<!--						&lt;!&ndash; <button class="btn btn-secondary btn-user btn-block" type="button" data-dismiss="modal">Cancel</button> &ndash;&gt;-->
-<!--						<button class="btn btn-primary btn-user btn-block" type="button" id="submitButton">Add</button>-->
-<!--					</form>-->
-<!--                </div>-->
-            </div>
-        </div>
-    </div>
 
-    <!-- Bootstrap Modal - Edit Transaction -->
-    <div id="editTransactionModal" class="modal fade" role="dialog">
+    <!-- Bootstrap Modal - Add Currency -->
+    <div id="addCurrencyModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="editTransactionHeader"></h5>
+                    <h5 class="modal-title font-weight-bold text-primary text-uppercase">New currency</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form class="user">
-                        <div class="input-group mb-3">
-                            <select class="custom-select px-4 py-2" id="listEditedSubcategory"></select>
-                        </div>
                         <div class="form-group">
-                            <input type="text" class="form-control form-control-category px-4"
-                                   id="inputEditedDescription" placeholder="Description" maxlength=25>
+                            <input type="text" class="form-control form-control-category px-3"
+                                   id="inputCurrencyName" placeholder="Currency name">
                         </div>
-                        <div class="form-group">
-                            <div class="row mb-3 no-gutters align-items-center d-flex flex-row justify-content-between">
-                                <div class="input-group-half">
-                                    <input type="number" class="form-control form-control-category px-4" id="editTransactionAmount"
-                                           step="0.01" placeholder="Amount" />
-                                </div>
-                                <div class="input-group-half date" id="editDate">
-                                    <input type="text" class="form-control form-control-category px-4" id="editTransactionDate" />
-                                    <span class="input-group-addon">
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span>
-                                </div>
-                            </div>
-                        </div>
-                        <span class="text-danger" id="modalEditTransactionErrorText"></span>
-                        <hr>
-                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitUpdateTransaction">Update transaction</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap Modal - Delete Transaction -->
-    <div id="deleteTransactionModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="deleteTransactionHeader"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="user">
-<!--                        <div class="input-group mb-3">-->
-<!--                            <select class="custom-select px-4 py-2" id="deletedSubcategory" disabled></select>-->
-<!--                        </div>-->
-                        <div class="form-group">
-                            <div class="row mb-3 no-gutters align-items-center d-flex flex-row justify-content-between">
-                                <div class="input-group-half">
-                                    <input type="number" class="form-control form-control-category px-4" id="deletedTransactionAmount"
-                                           step="0.01" placeholder="Amount" disabled/>
-                                </div>
-                                <div class="input-group-half date">
-                                    <input type="text" class="form-control form-control-category px-4" id="deletedTransactionDate" disabled/>
-<!--                                    <span class="input-group-addon">-->
-<!--										<span class="glyphicon glyphicon-calendar"></span>-->
-<!--									</span>-->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control form-control-category px-4"
-                                   id="deletedSubcategory" placeholder="Subcategory" disabled>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control form-control-category px-4"
-                                   id="deletedDescription" placeholder="Description" disabled>
-                        </div>
-                        <span class="text-danger" id="modalDeleteTransactionErrorText"></span>
-                        <hr>
-                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitDeleteTransaction">Delete transaction</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-	<!-- Bootstrap Modal - Add Category -->
-	<div id="addCategoryModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase">New category</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-                </div>
-                <div class="modal-body">
-					<form class="user">
-						<div class="form-group">
-							<div class="row mb-3 no-gutters align-items-center d-flex flex-row justify-content-between">
-								<div class="input-group-half">
-									<input type="text" class="form-control form-control-category px-3"
-										   id="inputCategory" placeholder="Category name" maxlength=18>
-								</div>
-								<div class="input-group-half">
-									<select class="custom-select px-3 py-2" id="inputCategoryCurrency"></select>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<input type="text" class="form-control form-control-category px-3"
-								id="inputCategoryDescription" placeholder="Category description">
-						</div>
-						<span class="text-danger" id="modalErrorText"></span>
-						<hr>
-						<button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitNewCategory">Add category</button>
-					</form>
-                </div>
-                <!-- <div class="modal-footer">
-					<form class="user">
-						<button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitNewCategory">Add category</button>
-					</form>
-                </div> -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap Modal - Edit Category -->
-    <div id="editCategoryModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="editCategoryHeader"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="user">
                         <div class="form-group">
                             <div class="row mb-3 no-gutters align-items-center d-flex flex-row justify-content-between">
                                 <div class="input-group-half">
                                     <input type="text" class="form-control form-control-category px-3"
-                                           id="inputNewCategory" placeholder="Enter new Category name" maxlength=18>
+                                           id="inputCurrencyShortName" placeholder="Currency shortname" maxlength=4>
                                 </div>
                                 <div class="input-group-half">
-                                    <select class="custom-select px-3 py-2" id="inputNewCategoryCurrency"></select>
+                                    <input type="text" class="form-control form-control-category px-3"
+                                           id="inputCurrencySign" placeholder="Currency sign">
                                 </div>
                             </div>
                         </div>
+
+                        <span class="text-danger" id="modalAddCurrencyErrorText"></span>
+                        <hr>
+                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitNewCurrency">Add currency</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Modal - Edit Currency -->
+    <div id="editCurrencyModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-primary text-uppercase mr-2" id="editCurrencyHeader"></h5>
+                    <h5 class="modal-title font-weight-bold text-primary" data-id="" id="editCurrencyId"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="user">
                         <div class="form-group">
                             <input type="text" class="form-control form-control-category px-3"
-                                   id="inputNewCategoryDescription" placeholder="Enter new Category description">
-                        </div>
-                        <span class="text-danger" id="modalEditCategoryErrorText"></span>
-                        <hr>
-                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitEditCategory">Update category</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap Modal - Delete Category -->
-    <div id="deleteCategoryModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="deleteCategoryHeader"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="user">
-<!--                        <div class="input-group mb-3">-->
-<!--                            <select class="custom-select px-4 py-2" id="listDeletedSubcategory"></select>-->
-<!--                        </div>-->
-                        <div class="form-check px-4 py-2">
-                            <input class="form-check-input" type="checkbox" id="deleteCategoryWithAllTransactions">
-                            <label class="form-check-label" for="deleteCategoryWithAllTransactions">Delete the Category with all Transactions</label>
-<!--                            <input type="text" class="form-control form-control-category px-4"-->
-<!--                                   id="inputSubcategory" placeholder="Subcategory name" maxlength=18>-->
-                        </div>
-                        <span class="text-danger" id="modalDeleteCategoryErrorText"></span>
-                        <hr>
-                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitDeleteCategory">Delete Category</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-	<!-- Bootstrap Modal - Add Budget -->
-	<div id="addBudgetModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="addBudgetHeader"></h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-                </div>
-                <div class="modal-body">
-					<form class="user">
-						<div class="input-group-half">
-							<input type="number" class="form-control form-control-category px-3" id="budgetAmount"
-								   step="0.01" placeholder="Budget of Category">
-						</div>
-						<span class="text-danger" id="modalBudgetErrorText"></span>
-						<hr>
-						<button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitAddBudget">Add budget</button>
-					</form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap Modal - Edit Budget -->
-    <div id="editBudgetModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="editBudgetHeader"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="user">
-                        <div class="input-group-half">
-                            <input type="number" class="form-control form-control-category px-3" id="newBudgetAmount"
-                                   step="0.01" placeholder="New budget of Category">
-                        </div>
-                        <span class="text-danger" id="modalEditBudgetErrorText"></span>
-                        <hr>
-                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitEditBudget">Edit budget</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap Modal - Delete Budget -->
-    <div id="deleteBudgetModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="deleteBudgetHeader"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="user">
-                        <div class="input-group-half">
-                            <input type="number" class="form-control form-control-category px-3" id="deletedBudgetAmount"
-                                   step="0.01" placeholder="Deleted budget of Category" disabled>
-                        </div>
-                        <span class="text-danger" id="modalDeleteBudgetErrorText"></span>
-                        <hr>
-                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitDeleteBudget">Delete budget</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap Modal - Add Subcategory -->
-	<div id="addSubcategoryModal" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title font-weight-bold text-primary text-uppercase" id="addSubcategoryHeader"></h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form class="user">
-						<div class="form-group">
-							<input type="text" class="form-control form-control-category px-4"
-								   id="inputSubcategory" placeholder="Subcategory name" maxlength=18>
-						</div>
-						<span class="text-danger" id="modalSubcategoryErrorText"></span>
-						<hr>
-						<button class="btn btn-primary btn-user btn-block text-uppercase" type="button"
-                                id="submitNewSubcategory">Add subcategory</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-
-    <!-- Bootstrap Modal - Update Subcategory -->
-    <div id="updateSubcategoryModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="updateSubcategoryHeader"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="user">
-                        <div class="input-group mb-3">
-                            <select class="custom-select px-4 py-2" id="listUpdatingSubcategory"></select>
+                                   id="inputEditedCurrencyName" placeholder="Currency name">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control form-control-category px-4"
-                                   id="updatedSubcategory" placeholder="NEW Subcategory name" maxlength=18>
+                            <div class="row mb-3 no-gutters align-items-center d-flex flex-row justify-content-between">
+                                <div class="input-group-half">
+                                    <input type="text" class="form-control form-control-category px-3"
+                                           id="inputEditedCurrencyShortName" placeholder="Currency shortname" maxlength=4>
+                                </div>
+                                <div class="input-group-half">
+                                    <input type="text" class="form-control form-control-category px-3"
+                                           id="inputEditedCurrencySign" placeholder="Currency sign">
+                                </div>
+                            </div>
                         </div>
-                        <span class="text-danger" id="modalUpdateSubcategoryErrorText"></span>
+
+                        <span class="text-danger" id="modalEditCurrencyErrorText"></span>
                         <hr>
-                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button"
-                                id="submitUpdateSubcategory">Update subcategory</button>
+                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitEditCurrency">Edit currency</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap Modal - Delete Subcategory -->
-    <div id="deleteSubcategoryModal" class="modal fade" role="dialog">
+    <!-- Bootstrap Modal - Edit Currency Error -->
+    <div id="editCurrencyErrorModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold text-primary text-uppercase" id="deleteSubcategoryHeader"></h5>
+                    <h5 class="modal-title font-weight-bold text-danger text-uppercase" id="editCurrencyErrorHeader">Edit Currency Error</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form class="user">
-                        <div class="input-group mb-3">
-                            <select class="custom-select px-4 py-2" id="listDeletedSubcategory"></select>
-                        </div>
-<!--                        <div class="form-group">-->
-<!--                            <input type="text" class="form-control form-control-category px-4"-->
-<!--                                   id="inputSubcategory" placeholder="Subcategory name" maxlength=18>-->
-<!--                        </div>-->
-                        <span class="text-danger" id="modalDeleteSubcategoryErrorText"></span>
-                        <hr>
-                        <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitDeleteSubcategory">Delete subcategory</button>
-                    </form>
+                <div class="modal-body">For edit Currency select one checkbox and try again...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Modal - Delete Currency Error -->
+    <div id="deleteCurrencyErrorModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-danger text-uppercase" id="deleteCurrencyErrorHeader">Delete Currency Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">For delete Currencies select one or more checkbox and try again...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Modal - Delete Users Error -->
+    <div id="deleteUsersErrorModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-danger text-uppercase" id="deleteUsersErrorHeader">Delete Users Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">For delete Users select one or more checkbox and try again...
                 </div>
             </div>
         </div>
@@ -686,11 +431,6 @@
 						</div>
 					</form>
                 </div>
-				<!-- <div class="modal-footer">
-					<form class="user">
-						<button class="btn btn-secondary btn-user" type="button" data-dismiss="modal">Cancel</button>
-					</form>
-                </div> -->
             </div>
         </div>
     </div>
@@ -745,8 +485,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary btn-user" type="button" data-dismiss="modal">Cancel</button>
-					<button class="btn btn-primary btn-user" type="button" id="logoutButton">Logout</button>
-<!--                    <a class="btn btn-primary" href="login.html">Logout</a>-->
+					<button class="btn btn-primary btn-user" type="button" id="logoutButtonModal">Logout</button>
                 </div>
             </div>
         </div>
@@ -764,7 +503,7 @@
     <!-- Custom scripts for all pages =============================================================-->
 	<script type="text/javascript" src="js/emsStorage.js"></script>
 	<script type="text/javascript" src="js/emsMain.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/admin.js"></script>
 </body>
 
 </html>

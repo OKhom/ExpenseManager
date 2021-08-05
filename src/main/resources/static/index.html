@@ -32,12 +32,11 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#" id="selectHome" role="button">
                 <div class="sidebar-brand-icon">
                     <i class="fas fa-home"></i>
                 </div>
 				<div class="sidebar-brand-text mx-3">OK-Expense</div>
-                <!-- <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div> -->
             </a>
 
             <!-- Divider -->
@@ -68,26 +67,17 @@
 			
             <!-- Nav Item - Categories -->
             <li class="nav-item">
-                <a class="nav-link" href="#" id="selectCategories" role="button">
+                <a class="nav-link py-1" href="#" id="selectCategories" role="button">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Categories</span></a>
             </li>
 			
             <!-- Nav Item - Transactions -->
             <li class="nav-item">
-                <a class="nav-link" href="#" id="selectTransactions" role="button">
-                    <!-- <i class="fas fa-fw fa-list"></i> -->
+                <a class="nav-link py-1 mb-3" href="#" id="selectTransactions" role="button">
 					<i class="fas fa-fw fa-layer-group"></i>
-					<!-- <i class="fas fa-fw fa-draw-polygon"></i> -->
                     <span>Operations</span></a>
             </li>
-
-            <!-- Nav Item - Budget -->
-<!--            <li class="nav-item">-->
-<!--                <a class="nav-link" href="#" id="select-budgets" role="button">-->
-<!--                    <i class="fas fa-fw fa-tachometer-alt"></i>-->
-<!--                    <span>Budgets</span></a>-->
-<!--            </li>-->
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -113,20 +103,6 @@
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
-                    <!-- Topbar Search -->
-                    <!-- <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" id="searchTopbar">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form> -->
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -182,7 +158,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-primary small" id="navUserName"></span>
+                                <span class="mr-2 d-none d-lg-inline text-secondary small" id="navUserName"></span>
                                 <img class="img-profile rounded-circle"
                                     src="images/undraw_profile.svg">
                             </a>
@@ -198,7 +174,7 @@
                                     Edit Profile
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="#" role="button" id="logoutButton">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -212,25 +188,18 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid" id="container-categories">
-				
-					<!-- Page Expense -->
-					<div class="container-fluid px-0" id="categories-expense">
 					
-						<!-- Page Heading -->
-						<div class="row mx-0 mb-3 d-flex flex-row align-items-start justify-content-between">
-							<h3 class="h3 mb-0 mr-3 font-weight-bold text-gray-600" id="categoryHead"></h3>
-							<div class="row no-gutters align-items-end">
-								<h3 class="h3 mb-0 mr-3 font-weight-bold text-gray-600">CATEGORIES</h3>
-								<a class="h4 my-1" id="btnAddCategory" href="#" role="button" data-toggle="modal" data-target="#addCategoryModal">
-									<i class="fas fa-plus-circle text-gray-600"></i>
-								</a>
-							</div>
-						</div>
+                    <!-- Page Heading -->
+                    <div class="row mx-0 mb-3 d-flex flex-row align-items-start justify-content-between">
+                        <h4 class="text mb-0 mt-2 font-weight-bold text-gray-600" id="categoryHead"></h4>
+                        <nav class="navbar navbar-expand navbar-light bg-light py-0">
+                            <button type="button" class="btn btn-outline-secondary" id="btnAddCategory"
+                                    href="#" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
+                        </nav>
+                    </div>
 
-						<!-- Category Cards View -->
-						<div class="row" id="categoryCards"></div>
-
-					</div>
+                    <!-- Category Cards View -->
+                    <div class="row" id="categoryCards"></div>
                 </div>
 				
 				<!-- Begin Page Content -->
@@ -238,10 +207,7 @@
 				
 					<!-- Page Heading -->
 					<div class="row mx-0 mb-3 d-flex flex-row align-items-start justify-content-between">
-						<h3 class="h3 mb-0 mr-3 font-weight-bold text-gray-600">Operations</h3>
-						<!-- <a class="h4 my-1" href="#" role="button" id="addCategory">
-							<i class="fas fa-plus-circle text-gray-600"></i>
-						</a> -->
+						<h4 class="text mb-0 mt-2 font-weight-bold text-gray-600">OPERATIONS</h4>
 					</div>
 
                     <div class="row">
@@ -253,7 +219,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            <footer class="sticky-footer bg-white py-2">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; OK-Software 2021</span>
@@ -311,12 +277,6 @@
 						<button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitNewTransaction">Add transaction</button>
 					</form>
                 </div>
-<!--                <div class="modal-footer">-->
-<!--					<form class="user">-->
-<!--						&lt;!&ndash; <button class="btn btn-secondary btn-user btn-block" type="button" data-dismiss="modal">Cancel</button> &ndash;&gt;-->
-<!--						<button class="btn btn-primary btn-user btn-block" type="button" id="submitButton">Add</button>-->
-<!--					</form>-->
-<!--                </div>-->
             </div>
         </div>
     </div>
@@ -375,9 +335,6 @@
                 </div>
                 <div class="modal-body">
                     <form class="user">
-<!--                        <div class="input-group mb-3">-->
-<!--                            <select class="custom-select px-4 py-2" id="deletedSubcategory" disabled></select>-->
-<!--                        </div>-->
                         <div class="form-group">
                             <div class="row mb-3 no-gutters align-items-center d-flex flex-row justify-content-between">
                                 <div class="input-group-half">
@@ -386,9 +343,6 @@
                                 </div>
                                 <div class="input-group-half date">
                                     <input type="text" class="form-control form-control-category px-4" id="deletedTransactionDate" disabled/>
-<!--                                    <span class="input-group-addon">-->
-<!--										<span class="glyphicon glyphicon-calendar"></span>-->
-<!--									</span>-->
                                 </div>
                             </div>
                         </div>
@@ -441,11 +395,6 @@
 						<button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitNewCategory">Add category</button>
 					</form>
                 </div>
-                <!-- <div class="modal-footer">
-					<form class="user">
-						<button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitNewCategory">Add category</button>
-					</form>
-                </div> -->
             </div>
         </div>
     </div>
@@ -498,14 +447,9 @@
                 </div>
                 <div class="modal-body">
                     <form class="user">
-<!--                        <div class="input-group mb-3">-->
-<!--                            <select class="custom-select px-4 py-2" id="listDeletedSubcategory"></select>-->
-<!--                        </div>-->
                         <div class="form-check px-4 py-2">
                             <input class="form-check-input" type="checkbox" id="deleteCategoryWithAllTransactions">
                             <label class="form-check-label" for="deleteCategoryWithAllTransactions">Delete the Category with all Transactions</label>
-<!--                            <input type="text" class="form-control form-control-category px-4"-->
-<!--                                   id="inputSubcategory" placeholder="Subcategory name" maxlength=18>-->
                         </div>
                         <span class="text-danger" id="modalDeleteCategoryErrorText"></span>
                         <hr>
@@ -661,10 +605,6 @@
                         <div class="input-group mb-3">
                             <select class="custom-select px-4 py-2" id="listDeletedSubcategory"></select>
                         </div>
-<!--                        <div class="form-group">-->
-<!--                            <input type="text" class="form-control form-control-category px-4"-->
-<!--                                   id="inputSubcategory" placeholder="Subcategory name" maxlength=18>-->
-<!--                        </div>-->
                         <span class="text-danger" id="modalDeleteSubcategoryErrorText"></span>
                         <hr>
                         <button class="btn btn-primary btn-user btn-block text-uppercase" type="button" id="submitDeleteSubcategory">Delete subcategory</button>
@@ -708,11 +648,6 @@
 						</div>
 					</form>
                 </div>
-				<!-- <div class="modal-footer">
-					<form class="user">
-						<button class="btn btn-secondary btn-user" type="button" data-dismiss="modal">Cancel</button>
-					</form>
-                </div> -->
             </div>
         </div>
     </div>
@@ -767,7 +702,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary btn-user" type="button" data-dismiss="modal">Cancel</button>
-					<button class="btn btn-primary btn-user" type="button" id="logoutButton">Logout</button>
+					<button class="btn btn-primary btn-user" type="button" id="logoutButtonModal">Logout</button>
 <!--                    <a class="btn btn-primary" href="login.html">Logout</a>-->
                 </div>
             </div>

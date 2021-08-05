@@ -1,6 +1,5 @@
 package com.okdev.ems.config.jwt;
 
-import com.okdev.ems.exceptions.EmsAuthException;
 import com.okdev.ems.services.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +33,12 @@ public class JwtFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        logger.info("do filter...");
+        log.info("do filter...");
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
         String requestURI = httpRequest.getRequestURI();
         if (token != null && jwtProvider.validateToken(token).getSuccess()) {
             String userLogin = jwtProvider.getEmailFromToken(token);
-//            String userId = jwtProvider.getIdFromToken(token);
             UserDetails customUserDetails = userDetailsService.loadUserByUsername(userLogin);
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());

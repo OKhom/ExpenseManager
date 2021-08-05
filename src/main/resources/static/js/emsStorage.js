@@ -1,17 +1,17 @@
 // VARIABLES =============================================================
-var TOKEN_KEY = "jwtToken";
-var LAST_USER = "lastUser";
+let TOKEN_KEY = "jwtToken";
+let LAST_USER = "lastUser";
+let ADMIN_VIEW = "adminView";
+let CURRENCY_ID = "currencyId";
 let USER_CURRENCY = "userCurrency";
 let TRANSACTION_ID = "transactionId";
-let CATEGORY_EXPENSE = "Expense";
-let CATEGORY_INCOME = "Income";
 let CATEGORY_ID = "categoryID";
-var CATEGORY_TYPE = "categoryType";
-var CURRENT_MONTH = "currentMonth";
-var CURRENT_YEAR = "currentYear";
-var MONTHS = "months";
-var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-var colors = ["pink", "orange", "warning", "info", "primary", "indigo", "purple"];
+let CATEGORY_TYPE = "categoryType";
+let CURRENT_MONTH = "currentMonth";
+let CURRENT_YEAR = "currentYear";
+let MONTHS = "months";
+let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+let colors = ["pink", "orange", "warning", "info", "primary", "indigo", "purple"];
 
 // FUNCTIONS =============================================================
 function getJwtToken() {
@@ -104,4 +104,20 @@ function getUserCurrency() {
 
 function setUserCurrency(userCurrency) {
     localStorage.setItem(USER_CURRENCY, userCurrency);
+}
+
+function getCurrencyId() {
+    return localStorage.getItem(CURRENCY_ID);
+}
+
+function setCurrencyId(currencyId) {
+    localStorage.setItem(CURRENCY_ID, currencyId);
+}
+
+function getAdminView() {
+    return localStorage.getItem(ADMIN_VIEW);
+}
+
+function setAdminView(adminView) {
+    localStorage.setItem(ADMIN_VIEW, adminView);
 }

@@ -30,6 +30,14 @@ public class Currencies {
         this.sign = sign;
     }
 
+    public static Currencies of(String name, String shortName, String sign) {
+        return new Currencies(name, shortName, sign);
+    }
+
+    public static Currencies fromDTO(CurrencyDTO currencyDTO) {
+        return Currencies.of(currencyDTO.getName(), currencyDTO.getShortName(), currencyDTO.getSign());
+    }
+
     public CurrencyDTO toDTO() {
         return CurrencyDTO.of(currencyId, name, shortName, sign);
     }

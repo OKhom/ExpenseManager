@@ -1,15 +1,4 @@
 $(document).ready(function(){
-    // $.getJSON('/account', function(data) {
-    //     $('#login').text(data.email);
-    //     $("#avatar").attr("src", data.pictureUrl);
-    // });
-    console.log("On LOAD /login.html Token is " + getJwtToken());
-    // $('.input100').each(function () {
-    //     // if ($(this).val().trim() != "") {
-    //         $(this).addClass('has-val');
-    //     // }
-    // });
-
     focusInput();
     validateInput();
 });
@@ -21,10 +10,8 @@ function focusInput() {
         $(this).on('blur', function () {
             if ($(this).val().trim() != "") {
                 $(this).addClass('has-val');
-                console.log("Focus ON");
             } else {
                 $(this).removeClass('has-val');
-                console.log("Focus OFF");
             }
         })
     });
@@ -33,32 +20,27 @@ function focusInput() {
 function validateInput() {
     /*==================================================================
     [ Validate ]*/
-    var input = $('.validate-input .input100');
-    console.log("Input Length = " + input.length);
+    let input = $('.validate-input .input100');
 
     $('.register100-btn').click(function () {
-        var check = true;
+        let check = true;
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             if (validate(input[i]) == false) {
                 showValidate(input[i]);
-                console.log("Input[" + i + "] = " + input[i]);
                 check = false;
             }
         }
 
         if (check === true) {
-            var registerData = {
+            let registerData = {
                 "firstName": $("#name").val(),
                 "lastName": $("#lastname").val(),
                 "email": $("#email").val(),
                 "password": $("#password").val()
             };
-            console.log(registerData);
             doRegister(registerData);
-            // window.location.assign("/index.html");
         }
-
         return check;
     });
 
@@ -83,13 +65,11 @@ function validateInput() {
     }
 
     function showValidate(input) {
-        var thisAlert = $(input).parent();
-
+        let thisAlert = $(input).parent();
         $(thisAlert).addClass('alert-validate');
     }
 
     function hideValidate(input) {
-        var thisAlert = $(input).parent();
-
+        let thisAlert = $(input).parent();
         $(thisAlert).removeClass('alert-validate');
     }
