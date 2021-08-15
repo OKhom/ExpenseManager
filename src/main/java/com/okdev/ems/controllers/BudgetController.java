@@ -3,6 +3,9 @@ package com.okdev.ems.controllers;
 import com.okdev.ems.dto.BudgetDTO;
 import com.okdev.ems.services.BudgetService;
 import com.okdev.ems.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/category/{categoryId}/budget")
+@Tag(name = "Budgets Controller", description = "Controller for getting, adding, updating and deleting budgets")
+@SecurityRequirement(name = "bearerAuth")
 public class BudgetController {
 
     @Autowired
@@ -24,6 +29,7 @@ public class BudgetController {
     BudgetService budgetService;
 
     @GetMapping("")
+    @Operation(summary = "Get All Budgets", description = "Allows to get all budgets by category ID")
     public ResponseEntity<List<BudgetDTO>> getAllBudgets(HttpServletRequest request,
                                                          @PathVariable("categoryId") Long categoryId) {
         Long userId = userService.getUserId(request);
@@ -32,6 +38,7 @@ public class BudgetController {
     }
 
     @GetMapping("/{year}/{month}")
+    @Operation(summary = "Get Category's Budget by Month", description = "Allows to get a category's budget by month")
     public ResponseEntity<BudgetDTO> getBudgetByDate(HttpServletRequest request,
                                                      @PathVariable("categoryId") Long categoryId,
                                                      @PathVariable("year") Integer year,
@@ -42,6 +49,7 @@ public class BudgetController {
     }
 
     @PostMapping("/{year}/{month}")
+    @Operation(summary = "Add Category's Budget by Month", description = "Allows to add a new category's budget by month")
     public ResponseEntity<BudgetDTO> addBudget(HttpServletRequest request,
                                                @PathVariable("categoryId") Long categoryId,
                                                @PathVariable("year") Integer year,
@@ -55,6 +63,7 @@ public class BudgetController {
     }
 
     @PutMapping("/{year}/{month}")
+    @Operation(summary = "Update Category's Budget by Month", description = "Allows to update a category's budget by month")
     public ResponseEntity<BudgetDTO> updateBudgetByDate(HttpServletRequest request,
                                                   @PathVariable("categoryId") Long categoryId,
                                                   @PathVariable("year") Integer year,
@@ -66,6 +75,7 @@ public class BudgetController {
     }
 
     @DeleteMapping("/{year}/{month}")
+    @Operation(summary = "Delete Category's Budget by Month", description = "Allows to delete a category's budget by month")
     public ResponseEntity<Map<String, Boolean>> removeBudget(HttpServletRequest request,
                                                              @PathVariable("categoryId") Long categoryId,
                                                              @PathVariable("year") Integer year,

@@ -7,6 +7,9 @@ import com.okdev.ems.models.enums.CategoryType;
 import com.okdev.ems.services.CategoryService;
 import com.okdev.ems.services.CurrencyService;
 import com.okdev.ems.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/category")
+@Tag(name = "Categories Controller", description = "Controller for getting, adding, updating and deleting categories and subcategories")
+@SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
 
     @Autowired
@@ -29,6 +34,7 @@ public class CategoryController {
     CurrencyService currencyService;
 
     @GetMapping("")
+    @Operation(summary = "Get All Categories", description = "Allows to get all categories")
     public ResponseEntity<List<CategoryDTO>> getAllCategories(HttpServletRequest request) {
         Long userId = userService.getUserId(request);
         List<CategoryDTO> categories = categoryService.fetchAllCategories(userId);
@@ -36,6 +42,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
+    @Operation(summary = "Get Category by ID", description = "Allows to get a category by it ID")
     public ResponseEntity<CategoryDTO> getCategoryById(HttpServletRequest request,
                                                        @PathVariable("categoryId") Long categoryId) {
         Long userId = userService.getUserId(request);
@@ -44,6 +51,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{year}/{month}/type/{categoryType}")
+    @Operation(summary = "Get Categories by Month and Type", description = "Allows to get all categories by month and type")
     public ResponseEntity<List<CategoryDTO>> getCategoryByTypeAndDate(HttpServletRequest request,
                                                         @PathVariable("year") Integer year,
                                                         @PathVariable("month") Integer month,
@@ -55,6 +63,7 @@ public class CategoryController {
     }
 
     @GetMapping("/amount/{year}/{month}")
+    @Operation(summary = "Get Amount by Month", description = "Allows to get total expense and income by month for all categories")
     public ResponseEntity<AmountDTO> getTotalAmountByDate(HttpServletRequest request,
                                                           @PathVariable("year") Integer year,
                                                           @PathVariable("month") Integer month) {
@@ -64,6 +73,7 @@ public class CategoryController {
     }
 
     @PostMapping("/{categoryType}")
+    @Operation(summary = "Add Category by Type", description = "Allows to add a new category by type (0 - expense, 1 - income)")
     public ResponseEntity<CategoryDTO> addCategory(HttpServletRequest request,
                                                   @PathVariable("categoryType") Integer categoryType,
                                                   @RequestBody CategoryDTO categoryDTO) {
@@ -74,6 +84,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{categoryId}")
+    @Operation(summary = "Update Category by ID", description = "Allows to update a category by it ID")
     public ResponseEntity<CategoryDTO> updateCategory(HttpServletRequest request,
                                                       @PathVariable("categoryId") Long categoryId,
                                                       @RequestBody CategoryDTO categoryDTO) {
@@ -83,6 +94,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
+    @Operation(summary = "Delete Category by ID", description = "Allows to delete a category by it ID")
     public ResponseEntity<ResultDTO> removeCategory(HttpServletRequest request,
                                                     @PathVariable("categoryId") Long categoryId,
                                                     @RequestBody CategoryDeleteDTO categoryDeleteDTO) {
@@ -92,6 +104,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}/subcategory")
+    @Operation(summary = "Get All Subcategories", description = "Allows to get all subcategories by category ID")
     ResponseEntity<List<SubcategoryDTOext>> getSubcategories(HttpServletRequest request,
                                                              @PathVariable("categoryId") Long categoryId) {
         Long userId = userService.getUserId(request);
@@ -100,6 +113,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}/subcategory/{subcategoryId}")
+    @Operation(summary = "Get Subcategory by ID", description = "Allows to get a subcategory by it ID and category ID")
     ResponseEntity<SubcategoryDTOext> getSubcategoryById(HttpServletRequest request,
                                                          @PathVariable("categoryId") Long categoryId,
                                                          @PathVariable("subcategoryId") Long subcategoryId) {
@@ -109,6 +123,7 @@ public class CategoryController {
     }
 
     @PostMapping("/{categoryId}/subcategory")
+    @Operation(summary = "Add Subcategory by Category ID", description = "Allows to add a subcategory by category ID")
     public ResponseEntity<SubcategoryDTOext> addSubcategory(HttpServletRequest request,
                                                             @PathVariable("categoryId") Long categoryId,
                                                             @RequestBody SubcategoryDTO subcategoryDTO) {
@@ -118,6 +133,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{categoryId}/subcategory/{subcategoryId}")
+    @Operation(summary = "Update Subcategory by ID", description = "Allows to update a subcategory by it ID and category ID")
     ResponseEntity<SubcategoryDTOext> updateSubcategory(HttpServletRequest request,
                                                         @PathVariable("categoryId") Long categoryId,
                                                         @PathVariable("subcategoryId") Long subcategoryId,
@@ -128,6 +144,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}/subcategory/{subcategoryId}")
+    @Operation(summary = "Delete Subcategory by ID", description = "Allows to delete a subcategory by it ID and category ID")
     ResponseEntity<ResultDTO> removeSubcategory(HttpServletRequest request,
                                                            @PathVariable("categoryId") Long categoryId,
                                                            @PathVariable("subcategoryId") Long subcategoryId) {
@@ -137,12 +154,14 @@ public class CategoryController {
     }
 
     @GetMapping("/currency")
+    @Operation(summary = "Get All Currencies", description = "Allows to get all currencies")
     ResponseEntity<List<CurrencyDTO>> fetchAllCurrencies() {
         List<CurrencyDTO> currency = currencyService.fetchAllCurrencies();
         return new ResponseEntity<>(currency, HttpStatus.OK);
     }
 
     @GetMapping("/currency/{currencyId}")
+    @Operation(summary = "Get Currency by ID", description = "Allows to get a currency by it ID")
     ResponseEntity<CurrencyDTO> fetchCurrencyById(@PathVariable("currencyId") Long currencyId) {
         CurrencyDTO currency = currencyService.fetchCurrencyById(currencyId);
         return new ResponseEntity<>(currency, HttpStatus.OK);
