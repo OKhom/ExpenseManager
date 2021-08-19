@@ -1,5 +1,8 @@
 package com.okdev.ems.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Data Transfer Object for Count of Users and Currencies Pages (Admin)")
 public class PageCountDTO {
     private final Long count;
     private final Long countCurrencies;

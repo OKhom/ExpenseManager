@@ -23,7 +23,7 @@ public class JwtProvider {
     private final Logger log = LoggerFactory.getLogger(JwtProvider.class);
 
     public TokenDTO generateToken(Users user) {
-        Date date = Date.from(LocalDate.now().plusDays(15).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date date = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
         String token = Jwts.builder()
                 .setSubject(user.getEmail())
                 .setExpiration(date)

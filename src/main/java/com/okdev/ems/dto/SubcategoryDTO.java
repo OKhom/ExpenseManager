@@ -1,5 +1,8 @@
 package com.okdev.ems.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Data Transfer Object for Subcategory Entity")
 public class SubcategoryDTO {
     private Long subcategoryId;
     private String subname;

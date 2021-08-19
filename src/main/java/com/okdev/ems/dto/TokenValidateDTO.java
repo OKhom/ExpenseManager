@@ -1,5 +1,8 @@
 package com.okdev.ems.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Data Transfer Object for Token Validate Status")
 public class TokenValidateDTO {
     private Boolean success;
     private String message;

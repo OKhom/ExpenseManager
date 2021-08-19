@@ -1,9 +1,11 @@
 package com.okdev.ems.dto;
 
 import com.okdev.ems.models.enums.CategoryType;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
+@Schema(description = "Data Transfer Object for Category Entity")
 public class CategoryDTO {
     private Long userId;
     private Long categoryId;

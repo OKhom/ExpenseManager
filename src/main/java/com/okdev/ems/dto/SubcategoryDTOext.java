@@ -1,5 +1,8 @@
 package com.okdev.ems.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Data Transfer Object for extended Subcategory Entity")
 public class SubcategoryDTOext extends SubcategoryDTO {
     private Long userId;
     private Long categoryId;

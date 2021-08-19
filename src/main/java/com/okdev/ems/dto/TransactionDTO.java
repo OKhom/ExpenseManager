@@ -2,9 +2,11 @@ package com.okdev.ems.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.okdev.ems.models.enums.CategoryType;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
 
+@Schema(description = "Data Transfer Object for Transaction Entity")
 public class TransactionDTO {
     private Long userId;
     private Long categoryId;

@@ -1,7 +1,9 @@
 package com.okdev.ems.dto;
 
 import com.okdev.ems.models.enums.UserRole;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "Data Transfer Object for User Entity")
 public class UserDTO {
     private Long userId;
     private Long currencyId;

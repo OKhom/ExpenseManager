@@ -1,5 +1,8 @@
 package com.okdev.ems.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Data Transfer Object for Income and Expense Total Amount (by Month)")
 public class AmountDTO {
     private Long userId;
     private Long currencyId;
