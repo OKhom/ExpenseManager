@@ -22,14 +22,16 @@ import static io.jsonwebtoken.lang.Strings.hasText;
 @Component
 public class JwtFilter extends GenericFilterBean {
 
-    private static final String AUTHORIZATION = "Authorization";
+    private final JwtProvider jwtProvider;
+    private final UserDetailsServiceImpl userDetailsService;
     private final Logger log = LoggerFactory.getLogger(JwtFilter.class);
+    private static final String AUTHORIZATION = "Authorization";
 
     @Autowired
-    private JwtProvider jwtProvider;
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    public JwtFilter(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService) {
+        this.jwtProvider = jwtProvider;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

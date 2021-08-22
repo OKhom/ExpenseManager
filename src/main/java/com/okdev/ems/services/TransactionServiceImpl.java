@@ -20,14 +20,17 @@ import java.util.stream.Collectors;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    @Autowired
-    TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
+    private final SubcategoryRepository subcategoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    SubcategoryRepository subcategoryRepository;
-
-    @Autowired
-    CategoryRepository categoryRepository;
+    public TransactionServiceImpl(TransactionRepository transactionRepository, SubcategoryRepository subcategoryRepository,
+                                  CategoryRepository categoryRepository) {
+        this.transactionRepository = transactionRepository;
+        this.subcategoryRepository = subcategoryRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     @Transactional(readOnly = true)

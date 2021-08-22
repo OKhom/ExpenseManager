@@ -19,23 +19,22 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final SubcategoryRepository subcategoryRepository;
+    private final CurrencyRepository currencyRepository;
+    private final ExchangeRates exchangeRates;
 
     @Autowired
-    CategoryRepository categoryRepository;
-
-    @Autowired
-    SubcategoryRepository subcategoryRepository;
-
-    @Autowired
-    TransactionRepository transactionRepository;
-
-    @Autowired
-    CurrencyRepository currencyRepository;
-
-    @Autowired
-    ExchangeRates exchangeRates;
+    public CategoryServiceImpl(UserRepository userRepository, CategoryRepository categoryRepository,
+                               SubcategoryRepository subcategoryRepository, CurrencyRepository currencyRepository,
+                               ExchangeRates exchangeRates) {
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
+        this.subcategoryRepository = subcategoryRepository;
+        this.currencyRepository = currencyRepository;
+        this.exchangeRates = exchangeRates;
+    }
 
     @Override
     @Transactional(readOnly = true)

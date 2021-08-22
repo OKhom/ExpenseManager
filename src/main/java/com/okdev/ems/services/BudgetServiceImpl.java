@@ -17,11 +17,14 @@ import java.util.stream.Collectors;
 @Service
 public class BudgetServiceImpl implements BudgetService{
 
-    @Autowired
-    CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final BudgetRepository budgetRepository;
 
     @Autowired
-    BudgetRepository budgetRepository;
+    public BudgetServiceImpl(CategoryRepository categoryRepository, BudgetRepository budgetRepository) {
+        this.categoryRepository = categoryRepository;
+        this.budgetRepository = budgetRepository;
+    }
 
     @Override
     @Transactional(readOnly = true)

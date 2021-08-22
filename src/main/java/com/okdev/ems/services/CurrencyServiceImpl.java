@@ -16,8 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class CurrencyServiceImpl implements CurrencyService {
 
+    private final CurrencyRepository currencyRepository;
+
     @Autowired
-    CurrencyRepository currencyRepository;
+    public CurrencyServiceImpl(CurrencyRepository currencyRepository) {
+        this.currencyRepository = currencyRepository;
+    }
 
     @Override
     @Transactional(readOnly = true)

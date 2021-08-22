@@ -22,11 +22,14 @@ import java.util.Map;
 @SecurityRequirement(name = "bearerAuth")
 public class BudgetController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+    private final BudgetService budgetService;
 
     @Autowired
-    BudgetService budgetService;
+    public BudgetController(UserService userService, BudgetService budgetService) {
+        this.userService = userService;
+        this.budgetService = budgetService;
+    }
 
     @GetMapping("")
     @Operation(summary = "Get All Budgets", description = "Allows to get all budgets by category ID")

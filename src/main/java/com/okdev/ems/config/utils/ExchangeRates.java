@@ -12,15 +12,15 @@ import java.io.IOException;
 public class ExchangeRates {
 
     @Value("${api.access.key}")
-    private String apiAccessKey;
+    private static String apiAccessKey;
 
-    private final String uri = "http://api.exchangeratesapi.io/v1/latest";
+    private static final String URI = "http://api.exchangeratesapi.io/v1/latest";
 
     public Double currentRate(String currencyDefault, String currencyCategory) throws IOException {
         ObjectMapper exchangeRates = new ObjectMapper();
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
-        String requestUrl = HttpUrl.parse(uri).newBuilder()
+        String requestUrl = HttpUrl.parse(URI).newBuilder()
                 .addQueryParameter("access_key", apiAccessKey)
                 .addQueryParameter("symbols", currencyDefault + "," + currencyCategory)
                 .build()

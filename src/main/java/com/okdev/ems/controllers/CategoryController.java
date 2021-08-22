@@ -24,14 +24,16 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+    private final CategoryService categoryService;
+    private final CurrencyService currencyService;
 
     @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    CurrencyService currencyService;
+    public CategoryController(UserService userService, CategoryService categoryService, CurrencyService currencyService) {
+        this.userService = userService;
+        this.categoryService = categoryService;
+        this.currencyService = currencyService;
+    }
 
     @GetMapping("")
     @Operation(summary = "Get All Categories", description = "Allows to get all categories")

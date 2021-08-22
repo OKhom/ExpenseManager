@@ -23,11 +23,14 @@ import java.util.Map;
 @Tag(name = "Users Controller", description = "Controller for authentication, registration and updating Users")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+    private final JwtProvider jwtProvider;
 
     @Autowired
-    JwtProvider jwtProvider;
+    public UserController(UserService userService, JwtProvider jwtProvider) {
+        this.userService = userService;
+        this.jwtProvider = jwtProvider;
+    }
 
     @GetMapping("/id")
     @Operation(summary = "Get User Parameters", description = "Allows to get a user parameters"

@@ -22,11 +22,14 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 public class TransactionController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+    private final TransactionService transactionService;
 
     @Autowired
-    TransactionService transactionService;
+    public TransactionController(UserService userService, TransactionService transactionService) {
+        this.userService = userService;
+        this.transactionService = transactionService;
+    }
 
     @GetMapping("/category/{categoryId}")
     @Operation(summary = "Get All Transactions", description = "Allows to get all transactions by category ID")

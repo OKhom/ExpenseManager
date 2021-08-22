@@ -24,17 +24,19 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService{
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final CurrencyRepository currencyRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    CurrencyRepository currencyRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    public UserServiceImpl(UserRepository userRepository, CurrencyRepository currencyRepository,
+                           PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService) {
+        this.userRepository = userRepository;
+        this.currencyRepository = currencyRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -65,17 +67,17 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public List<UserDTO> getAllUsers(Pageable pageable) {
-        List<UserDTO> usersList = userRepository.findUsersByRole(UserRole.USER, pageable)
-                .stream().map(Users::toDTO).collect(Collectors.toList());
-        return usersList;
+        return userRepository.findUsersByRole(UserRole.USER, pageable).stream()
+                .map(Users::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserDTO> findByPattern(String pattern) {
-        List<UserDTO> usersList = userRepository.findByPattern(pattern)
-                .stream().map(Users::toDTO).collect(Collectors.toList());
-        return usersList;
+        return userRepository.findByPattern(pattern).stream()
+                .map(Users::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -136,7 +138,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void deleteUsers(List<Long> usersId) throws EmsResourceNotFoundException {
-        usersId.forEach((u) -> userRepository.deleteById(u));
+        usersId.forEach(userRepository::deleteById);
     }
 
     @Override

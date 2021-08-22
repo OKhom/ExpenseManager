@@ -1,7 +1,5 @@
 package com.okdev.ems.config.jwt;
 
-import com.okdev.ems.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,12 +15,6 @@ import java.util.Collection;
 
 @Component
 public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    JwtProvider jwtProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,

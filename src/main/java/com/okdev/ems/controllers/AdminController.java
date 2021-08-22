@@ -1,6 +1,5 @@
 package com.okdev.ems.controllers;
 
-import com.okdev.ems.config.jwt.JwtProvider;
 import com.okdev.ems.dto.CurrencyDTO;
 import com.okdev.ems.dto.PageCountDTO;
 import com.okdev.ems.dto.UserDTO;
@@ -28,16 +27,15 @@ import java.util.Map;
 @SecurityRequirement(name = "bearerAuth")
 public class AdminController {
 
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    CurrencyService currencyService;
-
-    @Autowired
-    JwtProvider jwtProvider;
-
+    private final UserService userService;
+    private final CurrencyService currencyService;
     private static final Integer PAGE_SIZE = 8;
+
+    @Autowired
+    public AdminController(UserService userService, CurrencyService currencyService) {
+        this.userService = userService;
+        this.currencyService = currencyService;
+    }
 
     @GetMapping("/id")
     @Operation(summary = "Get User Parameters", description = "Allows to get a user parameters")
