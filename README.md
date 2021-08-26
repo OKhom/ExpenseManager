@@ -153,3 +153,6 @@ ExpenseManager
 ### Repositories  
 *	Interacts with Datasource (Ex Database, File System, etc) and knows about it  
 *	Service layer propagate request to this layer  
+### DTO (data transfer object)
+* Simple objects that carries data between processes
+* Not contains any business logic
