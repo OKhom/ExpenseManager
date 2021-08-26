@@ -14,6 +14,7 @@ This application helps user to maintain and keep track of their expenses and inc
 **ADMIN** can perform the following operations in the application:  
 `1.	Delete user profile`  
 `2.	Add, Edit and Delete currencies`  
+`3. View all user profiles and currencies`  
 
 # Project Components
 **REST API:** project uses the Spring Boot framework with Springboot-Data and Springboot-Security. Apart from this, project uses JSON Web Token (JWT) for users authentication.  
