@@ -7,8 +7,8 @@ This application helps user to maintain and keep track of their expenses and inc
 `3.	Add, Edit and Delete user’s categories and subcategories`  
 `4.	Set, Edit and Delete monthly budget limit for each category`  
 `5.	Add, Edit and Delete expense and income transactions`  
-`6.	View overall monthly transactions`  
-`7. View total monthly expense and income`  
+`6.	View user's monthly transactions`  
+`7. View user's total monthly expense and income`  
 
 **ADMIN** can perform the following operations in the application:  
 `1.	Delete user profile`  
