@@ -4,14 +4,15 @@ This application helps user to maintain and keep track of their expenses and inc
 **USER** can perform the following operations in the application:  
 `1.	Edit user profile`  
 `2.	Set default user’s currency`  
-`3.	Set, Edit and Delete monthly budget limit`  
-`4.	Add, Edit and Delete user’s categories and subcategories`  
+`3.	Add, Edit and Delete user’s categories and subcategories`  
+`4.	Set, Edit and Delete monthly budget limit for each category`  
 `5.	Add, Edit and Delete expense and income transactions`  
-`6.	View overall monthly expenses`
+`6.	View overall monthly transactions`  
+`7. View total monthly expense and income`  
 
 **ADMIN** can perform the following operations in the application:  
 `1.	Delete user profile`  
-`2.	Add, Edit and Delete currencies`
+`2.	Add, Edit and Delete currencies`  
 
 # Project Components
 **REST API:** project uses the Spring Boot framework with Springboot-Data and Springboot-Security. Apart from this, project uses JSON Web Token (JWT) for users authentication.  
