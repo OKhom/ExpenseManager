@@ -144,10 +144,10 @@ ExpenseManager
                 └───vendor
 ```
 
-### Controller  
+### Controllers  
 *	Responsible to respond for client HTTP requests  
 *	Controller delegates requests processing to service layer, get back response from it and hand it to server  
-### Service  
+### Services  
 *	Contains business logic  
 *	Interact with other dependent services  
 ### Repositories  
