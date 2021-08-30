@@ -128,16 +128,20 @@ ExpenseManager
                 ├───css
                 │       index.css
                 │       index.min.css
-                │       login.css
                 │       main.css
+                │       main.min.css
                 │       util.css
+                │       util.min.css
                 │       
                 ├───fonts 
                 ├───images
                 ├───js
                 │       admin.js
+                │       admin.min.js
                 │       emsMain.js
+                │       emsMain.min.js
                 │       emsStorage.js
+                │       emsStorage.min.js
                 │       index.js
                 │       index.min.js
                 │       login.js
