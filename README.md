@@ -120,11 +120,11 @@ ExpenseManager
             │   
             └───static
                 │   admin.html
+                │   apidocs.html
                 │   index.html
                 │   login.html
                 │   registration.html
                 │   
-                ├───apidocs
                 ├───css
                 │       index.css
                 │       index.min.css
@@ -159,3 +159,9 @@ ExpenseManager
 ### DTO (data transfer object)
 *   Simple objects that carries data between processes
 *   Not contains any business logic
+
+# API Documentation URL
+https://ok-expense.herokuapp.com/apidocs.html
+
+# Project URL
+https://ok-expense.herokuapp.com/index.html
