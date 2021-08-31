@@ -17,8 +17,8 @@ This application helps user to maintain and keep track of their expenses and inc
 `3. View all user profiles and currencies`  
 
 # Project Components
-**REST API:** project uses the Spring Boot framework with Springboot-Data and Springboot-Security. Apart from this, project uses JSON Web Token (JWT) for users authentication.  
-**DATABASE:** project uses the MySQL as the relational database and Jdbc to interact with it.  
+**REST API:** project uses the Spring Boot framework with Springboot-Data, Springboot-Security and JPA/Hibernate. Apart from this, project uses JSON Web Token (JWT) for users authentication.  
+**DATABASE:** project uses the MySQL as the relational database.  
 **USER Interface:** project uses the Bootstrap framework.  
 **API DOCS:** project uses the OpenAPI with Swagger-UI.  
 
