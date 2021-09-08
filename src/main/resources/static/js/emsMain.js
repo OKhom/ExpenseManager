@@ -116,6 +116,20 @@ function loadSubcategories(returnSubcategory) {
     });
 }
 
+function loadBudgetByCategoryId(returnBudget) {
+    $.ajax({
+        url: "api/category/" + getCurrentCategoryID() + "/budget/"+ getCurrentYear() + "/" + (parseInt(getCurrentMonth()) + 1),
+        type: "GET",
+        headers: createAuthorizationTokenHeader(),
+        success: function (data, textStatus, jqXHR) {
+            returnBudget(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            errorToConsole(jqXHR);
+        }
+    });
+}
+
 function loadTransactionCards() {
     $.ajax({
         url: "/api/transaction/" + getCurrentYear() + "/" + (parseInt(getCurrentMonth()) + 1),

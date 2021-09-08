@@ -295,6 +295,8 @@ $(document).ready(function(){
         setCurrentCategoryID($(this).data('id'));
         loadCategoryById(function (data) {
             $('#editBudgetHeader').empty().append(data.name).append(" - edit budget");
+        });
+        loadBudgetByCategoryId(function (data) {
             $('#newBudgetAmount').val(data.budget);
         });
         $("#editBudgetModal").modal('show');
@@ -326,6 +328,8 @@ $(document).ready(function(){
         setCurrentCategoryID($(this).data('id'));
         loadCategoryById(function (data) {
             $('#deleteBudgetHeader').empty().append(data.name).append(" - delete budget");
+        });
+        loadBudgetByCategoryId(function (data) {
             $('#deletedBudgetAmount').val(data.budget);
         });
         $("#deleteBudgetModal").modal('show');
