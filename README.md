@@ -151,19 +151,6 @@ ExpenseManager
                 └───vendor
 ```
 
-### Controllers  
-*	Responsible to respond for client HTTP requests  
-*	Controller delegates requests processing to service layer, get back response from it and hand it to server  
-### Services  
-*	Contains business logic  
-*	Interact with other dependent services  
-### Repositories  
-*	Interacts with Datasource (Ex Database, File System, etc) and knows about it  
-*	Service layer propagate request to this layer  
-### DTO (data transfer object)
-*   Simple objects that carries data between processes
-*   Not contains any business logic
-
 # API Documentation URL
 https://ok-expense.herokuapp.com/apidocs.html
 
